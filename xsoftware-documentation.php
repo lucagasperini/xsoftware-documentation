@@ -44,7 +44,7 @@ class xs_documentation_plugin
                         wp_die( __( "Exit!" ) );
                 }
                 
-                wp_enqueue_style("admin_style", plugins_url("style/admin.css", __FILE__));
+                xs_framework::init_admin_style();
                 
                 echo "<div class=\"wrap\">";
                 echo "<h2>Documentation configuration</h2>";
