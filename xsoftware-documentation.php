@@ -63,7 +63,7 @@ class xs_documentation_plugin
         
         function section_menu()
         {
-                register_setting( "xsoftware_documentation", "socials_accounts", array($this, "input") );
+                register_setting( "xsoftware_documentation", "docs", array($this, "input") );
                 add_settings_section( "documentation_settings", "Documentation configuration", array($this, "show"), "xsoftware_documentation" );
         }
         
