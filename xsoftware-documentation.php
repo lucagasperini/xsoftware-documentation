@@ -14,12 +14,16 @@ if (!class_exists("xs_documentation_plugin")) :
 class xs_documentation_plugin
 {
         
-        private $default = array();
+        private $default = array( 'rest' => 'template.rts' );
+        
+        private $options = NULL;
 
         public function __construct()
         {
                 add_action("admin_menu", array($this, "admin_menu"));
                 add_action("admin_init", array($this, "section_menu"));
+                
+                $this->options = get_option('xs_docs', $this->default);
         }
         
         function admin_menu()
@@ -63,16 +67,25 @@ class xs_documentation_plugin
         
         function section_menu()
         {
-                register_setting( "xsoftware_documentation", "docs", array($this, "input") );
+                register_setting( "xsoftware_documentation", "xs_docs", array($this, "input") );
                 add_settings_section( "documentation_settings", "Documentation configuration", array($this, "show"), "xsoftware_documentation" );
         }
         
-        function input()
+        function input($input)
         {
+                $input['rest'] = sanitize_text_field($input['rest']);
+                return $input;
         }
         
         function show()
         {
+                $settings_field = array('value' => $this->options['rest'], 'name' => 'xs_docs[rest]');
+                add_settings_field($settings_field['name'], 
+                'File ReST:',
+                'xs_framework::create_input',
+                'xsoftware_documentation',
+                'documentation_settings',
+                $settings_field);
         }
         
 }
