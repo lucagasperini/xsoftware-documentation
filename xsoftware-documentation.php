@@ -94,6 +94,8 @@ class xs_documentation_plugin
         {
                 include 'rest.php';
                 
+                wp_enqueue_style('xs_documentation_style', plugins_url('style/template.css', __FILE__));
+                
                 $filename = __DIR__ . $this->options['rest']; //FIXME: Handle if is not set or if not exists!
                 
                 $file = fopen($filename, 'r');
