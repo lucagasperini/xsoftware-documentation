@@ -14,7 +14,7 @@ if (!class_exists("xs_documentation_plugin")) :
 class xs_documentation_plugin
 {
         
-        private $default = array( 'rest' => 'template.rts' );
+        private $default = array( 'rest' => '/template/linux.rst' );
         
         private $options = NULL;
 
@@ -24,6 +24,8 @@ class xs_documentation_plugin
                 add_action("admin_init", array($this, "section_menu"));
                 
                 $this->options = get_option('xs_docs', $this->default);
+                
+                add_shortcode( 'xsoftware_documentation', array($this, 'page_docs') );
         }
         
         function admin_menu()
@@ -86,6 +88,18 @@ class xs_documentation_plugin
                 'xsoftware_documentation',
                 'documentation_settings',
                 $settings_field);
+        }
+        
+        function page_docs()
+        {
+                include 'rest.php';
+                
+                $filename = __DIR__ . $this->options['rest']; //FIXME: Handle if is not set or if not exists!
+                
+                $file = fopen($filename, 'r');
+                $source = fread($file, filesize($filename));
+                
+                echo rest2html($source);
         }
         
 }
