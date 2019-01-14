@@ -11,18 +11,24 @@ if(!defined("ABSPATH")) exit;
 
 if (!class_exists("xs_documentation_plugin")) :
 
+include 'RST/autoload.php';
+
 class xs_documentation_plugin
 {
         
         private $default = array( 'rest' => '/template/linux.rst' );
         
         private $options = NULL;
+        
+        private $parser = NULL;
 
         public function __construct()
         {
                 add_action("admin_menu", array($this, "admin_menu"));
                 add_action("admin_init", array($this, "section_menu"));
-                
+                $this->parser = new Gregwar\RST\Parser;
+                // Using parser
+                $this->parser->getEnvironment()->getErrorManager()->abortOnError(false);
                 $this->options = get_option('xs_docs', $this->default);
                 
                 add_shortcode( 'xsoftware_documentation', array($this, 'page_docs') );
@@ -92,8 +98,6 @@ class xs_documentation_plugin
         
         function page_docs()
         {
-                include 'rest.php';
-                
                 wp_enqueue_style('xs_documentation_style', plugins_url('style/template.css', __FILE__));
                 
                 $filename = __DIR__ . $this->options['rest']; //FIXME: Handle if is not set or if not exists!
@@ -101,7 +105,9 @@ class xs_documentation_plugin
                 $file = fopen($filename, 'r');
                 $source = fread($file, filesize($filename));
                 
-                echo rest2html($source);
+                $document = $this->parser->parse($source);
+                
+                echo $document;
         }
         
 }

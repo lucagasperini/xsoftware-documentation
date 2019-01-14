@@ -1,12 +1,3 @@
-.. XSoftware documentation master file, created by
-   sphinx-quickstart on Thu Oct 25 10:38:14 2018.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-Welcome to XSoftware's documentation!
-=====================================
-
-.. toctree::
 .. _codingstyle:
 
 Linux kernel coding style
@@ -207,15 +198,6 @@ statement; in the latter case use braces in both branches:
 		do_that();
 	} else {
 		otherwise();
-	}
-
-Also, use braces when a loop contains more than a single simple statement:
-
-.. code-block:: c
-
-	while (condition) {
-		if (test)
-			do_something();
 	}
 
 3.1) Spaces
@@ -542,6 +524,10 @@ ugly), but try to avoid excess.  Instead, put the comments at the head
 of the function, telling people what it does, and possibly WHY it does
 it.
 
+When commenting the kernel API functions, please use the kernel-doc format.
+See the files at :ref:`Documentation/doc-guide/ <doc_guide>` and
+``scripts/kernel-doc`` for details.
+
 The preferred style for long (multi-line) comments is:
 
 .. code-block:: c
@@ -635,12 +621,6 @@ options ``-kr -i8`` (stands for ``K&R, 8 character indents``), or use
 ``indent`` has a lot of options, and especially when it comes to comment
 re-formatting you may want to take a look at the man page.  But
 remember: ``indent`` is not a fix for bad programming.
-
-Note that you can also use the ``clang-format`` tool to help you with
-these rules, to quickly re-format parts of your code automatically,
-and to review full files in order to spot coding style mistakes,
-typos and possible improvements. It is also handy for sorting ``#includes``,
-for aligning variables/macros, for reflowing text and other similar tasks.
 
 
 10) Kconfig configuration files
@@ -1000,8 +980,8 @@ do so, though, and doing so unnecessarily can limit optimization.
 
 When writing a single inline assembly statement containing multiple
 instructions, put each instruction on a separate line in a separate quoted
-string, and end each string except the last with ``\n\t`` to properly indent
-the next instruction in the assembly output:
+string, and end each string except the last with \n\t to properly indent the
+next instruction in the assembly output:
 
 .. code-block:: c
 
