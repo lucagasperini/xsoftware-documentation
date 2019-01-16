@@ -65,15 +65,6 @@ class xs_documentation_plugin
                 echo "<h2>Documentation configuration</h2>";
                 
                 echo "<form action=\"options.php\" method=\"post\">";
-                
-                settings_fields("xsoftware_documentation");
-                do_settings_sections("xsoftware_documentation");
-                
-                submit_button( "", "primary", "globals", true, NULL );
-                
-                echo "</form>";
-                
-                echo "<form action=\"options.php\" method=\"post\">";
                
                 settings_fields('setting_docs');
                 do_settings_sections('docs');
@@ -87,17 +78,9 @@ class xs_documentation_plugin
         
         function section_menu()
         {
-                register_setting( "xsoftware_documentation", "xs_docs", array($this, "input") );
-                add_settings_section( "documentation_settings", "Documentation configuration", array($this, "show"), "xsoftware_documentation" );
                 
                 register_setting( 'setting_docs', 'xs_docs', array($this, 'input_docs') );
                 add_settings_section( 'section_docs', 'Documentation', array($this, 'show_docs'), 'docs' );
-        }
-        
-        function input($input)
-        {
-                $input['rest'] = sanitize_text_field($input['rest']);
-                return $input;
         }
         
         function input_docs($input)
@@ -285,18 +268,6 @@ class xs_documentation_plugin
                 xs_framework::create_table(array('headers' => $fields, 'data' => $docs));
         }
 
-        
-        function show()
-        {
-                $settings_field = array('value' => $this->options['rest'], 'name' => 'xs_docs[rest]');
-                add_settings_field($settings_field['name'], 
-                'File ReST:',
-                'xs_framework::create_input',
-                'xsoftware_documentation',
-                'documentation_settings',
-                $settings_field);
-        }
-        
         function page_docs()
         {
                 wp_enqueue_style('xs_documentation_style', plugins_url('style/template.css', __FILE__));
