@@ -275,7 +275,7 @@ class xs_documentation_plugin
                 $fields[] = "Actions";
                 $fields[] = "ID";
                 $fields[] = "Product";
-                $fields[] = "Lang";
+                $fields[] = "Language";
                 $fields[] = "Title";
                 $fields[] = "Text";
                 $fields[] = "Created By";
