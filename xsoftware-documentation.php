@@ -17,7 +17,7 @@ include 'database.php';
 class xs_documentation_plugin
 {
         
-        private $default = array( 'rest' => '/template/linux.rst' );
+        private $default = array( 'template_file' => 'template.php' );
         
         private $options = NULL;
         
@@ -65,12 +65,20 @@ class xs_documentation_plugin
                 echo "<div class=\"wrap\">";
                 echo "<h2>Documentation configuration</h2>";
                 
+                echo '<form action="options.php" method="post">';
+
+                settings_fields('setting_docs_globals');
+                do_settings_sections('docs_globals');
+
+                submit_button( '', 'primary', 'globals', true, NULL );
+                echo '</form>';
+                
                 echo "<form action=\"options.php\" method=\"post\">";
                
                 settings_fields('setting_docs');
                 do_settings_sections('docs');
                 
-                submit_button( 'Update products', 'primary', 'product_update', true, NULL );
+                submit_button( '', 'primary', 'xs_docs', true, NULL );
                 
                 echo "</form>";
                 
@@ -79,11 +87,29 @@ class xs_documentation_plugin
         
         function section_menu()
         {
+                register_setting( 'setting_docs_globals', 'xs_docs_globals', array($this, 'input_globals') );
+                add_settings_section( 'section_docs_globals', 'Global settings', array($this, 'show_globals'), 'docs_globals' );
                 
                 register_setting( 'setting_docs', 'xs_docs', array($this, 'input_docs') );
                 add_settings_section( 'section_docs', 'Documentation', array($this, 'show_docs'), 'docs' );
         }
         
+        function input_globals($input)
+        {
+                $input['template_file'] = sanitize_text_field( $input['template_file'] );
+                return $input;
+        }
+        
+        function show_globals()
+        {
+                $settings_field = array('value' => $this->options['template_file'], 'name' => 'xs_docs_globals[template_file]');
+                add_settings_field($settings_field['name'], 
+                'Template file path:',
+                'xs_framework::create_input',
+                'docs_globals',
+                'section_docs_globals',
+                $settings_field);
+        }
         function input_docs($input)
         {
                 if(isset($input['new']))
@@ -123,7 +149,7 @@ class xs_documentation_plugin
                         'text' => 'Back'
                 ));
                 
-                $docs = $this->db->get_by(array('id' => $id));
+                $docs = $this->db->get(array('id' => $id));
                 if(count($docs) != 1)
                         return;
                 $doc = $docs[0];
@@ -275,12 +301,18 @@ class xs_documentation_plugin
         {
                 wp_enqueue_style('xs_documentation_style', plugins_url('style/template.css', __FILE__));
                 
-                $id = isset($_GET['id']) ? $_GET['id'] : '';
+                include $this->options['template_file'];
                 
-                if(empty($id))
-                        $this->main($this->db->get());
+                $query = isset($_GET['id']) ? array('id' => $_GET['id']) : array();
+                
+                $search = $this->db->get($query);
+                
+                if(count($search) > 1)
+                        docs_main($search);
+                else if(count($search) == 1)
+                        docs_single($search[0]);
                 else
-                        $this->single(array('id' => $id));
+                        wp_die();
 
                 /*
                 $filename = __DIR__ . $this->options['rest']; //FIXME: Handle if is not set or if not exists!
@@ -291,30 +323,6 @@ class xs_documentation_plugin
                 $document = $this->parser->parse($source);
                 
                 echo $document;*/
-        }
-        
-        function single($query)
-        {
-                $search = $this->db->get_by($query);
-                
-                if(count($search) != 1)
-                        return;
-                $single = $search[0];
-                
-                echo $single['id'];
-                echo $single['title'];
-                echo $single['text'];
-                echo $single['create_by'];
-                echo $single['create_date'];
-                echo $single['modify_date'];
-        }
-        
-        function main($array)
-        {
-                echo '<div class="product_list">';
-                foreach($array as $single)
-                        echo '<div class="product_list_item"><a href="?id='.$single['id'].'"><span>'.$single['title'].'</span></a></div>';
-                echo '</div>';
         }
         
 }

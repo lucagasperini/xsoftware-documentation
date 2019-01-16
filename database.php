@@ -63,42 +63,13 @@ class xs_documentation_database
                 return $offset;
         }
         
-        function get() 
-        {
-                $offset = array();
-                $user_table = $this->get_users_table();
-                $sql = "SELECT xs_documentation.id AS id, 
-                        xs_documentation.product AS product,
-                        xs_documentation.lang AS lang,
-                        xs_documentation.title AS title,
-                        xs_documentation.text AS text,
-                        users_tbl.user_nicename AS create_by,
-                        FROM_UNIXTIME(xs_documentation.create_date) AS 'create_date',
-                        FROM_UNIXTIME(xs_documentation.modify_date) AS 'modify_date'
-                        FROM xs_documentation
-                                JOIN xs_products
-                                ON xs_documentation.product = xs_products.name
-                                JOIN ".$user_table." AS users_tbl
-                                ON xs_documentation.create_by = users_tbl.ID
-                        WHERE xs_products.lang=xs_documentation.lang";
-                        
-                $result = $this->execute_query($sql);
-                if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                                $offset[] = $row;
-                        }
-                }
-                $result->close();
-                return $offset;
-        }
-        
         function get_users_table()
         {
                 global $wpdb;
                 return $wpdb->prefix . "users";
         }
         
-        function get_by($query) 
+        function get($query = array()) 
         {
                 $default = array(
                         'id' => '', 
