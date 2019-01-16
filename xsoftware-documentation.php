@@ -129,14 +129,13 @@ class xs_documentation_plugin
                         return;
                 }
                 
-                $get = $_GET["edit"];
+                $get = array('id' => $_GET["edit"]);
                 
                 if($get == "new") {
                         $this->show_docs_add();
                         return;
                 }
-               
-                $products = $this->db->get(NULL, $get);
+                
                 $this->show_docs_edit_single($get);
                 return;
         }
@@ -149,7 +148,7 @@ class xs_documentation_plugin
                         'text' => 'Back'
                 ));
                 
-                $docs = $this->db->get(array('id' => $id));
+                $docs = $this->db->get($id);
                 if(count($docs) != 1)
                         return;
                 $doc = $docs[0];
