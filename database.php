@@ -27,15 +27,16 @@ class xs_documentation_database
                 $result = $this->conn->query("SELECT 1 FROM `xs_documentation` LIMIT 1");
                 if($result === FALSE)
                         $this->conn->query("CREATE TABLE xs_documentation ( 
-                        `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                        `product` VARCHAR(64) NOT NULL,
-                        `lang` VARCHAR(16) NOT NULL,
-                        `title` VARCHAR(64) NOT NULL,
-                        `text` TEXT NOT NULL,
-                        `create_by` INT(11) NOT NULL,
-                        `create_date` INT(11) NOT NULL,
-                        `modify_date` INT(11) NOT NULL
-                        );");
+                                `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                                `product` VARCHAR(64) NOT NULL,
+                                `lang` VARCHAR(16) NOT NULL,
+                                `title` VARCHAR(64) NOT NULL,
+                                `text` TEXT NOT NULL,
+                                `create_by` INT(11) NOT NULL,
+                                `create_date` INT(11) NOT NULL,
+                                `modify_date` INT(11) NOT NULL
+                                );"
+                        );
         }
         
         function execute_query($sql_query)
@@ -248,8 +249,16 @@ class xs_documentation_database
                 if($query === false) {
                         trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $this->conn->errno . ' ' . $this->conn->error, E_USER_ERROR);
                 }
-                $query->bind_param("ssssisii", $single['product'], $single['title'], $single['status'],
-                $single['descr'], $single['assignee'], $single['importance'],$single['modify_date'], $id);
+                $query->bind_param(
+                        "ssssii", 
+                        $single['product'], 
+                        $single['lang'],
+                        $single['title'],
+                        $single['text'], 
+                        $single['modify_date'], 
+                        $id
+                );
+                
                 if(!$query->execute()) {
                         echo "Could not run query: SQL_ERROR -> " . $query->error . " SQL_QUERY -> " . $sql;
                         exit;

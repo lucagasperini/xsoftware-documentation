@@ -104,7 +104,9 @@ class xs_documentation_plugin
         {
                 if(isset($input['new']))
                         $this->db->add($input['new']);
-                        
+                else
+                        $this->db->update_single($input, $input['id']);
+
                 unset($input);
         }
         
