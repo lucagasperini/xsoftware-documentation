@@ -34,7 +34,7 @@ class xs_documentation_plugin
                 $this->options = get_option('xs_docs', $this->default);
                 $this->db = new xs_documentation_database();
                 
-                add_shortcode( 'xsoftware_documentation', array($this, 'page_docs') );
+                add_shortcode( 'xsoftware_documentation', array($this, 'shortcode') );
         }
         
         function admin_menu()
@@ -271,10 +271,18 @@ class xs_documentation_plugin
                 xs_framework::create_table(array('headers' => $fields, 'data' => $docs));
         }
 
-        function page_docs()
+        function shortcode()
         {
                 wp_enqueue_style('xs_documentation_style', plugins_url('style/template.css', __FILE__));
                 
+                $id = isset($_GET['id']) ? $_GET['id'] : '';
+                
+                if(empty($id))
+                        $this->main($this->db->get());
+                else
+                        $this->single(array('id' => $id));
+
+                /*
                 $filename = __DIR__ . $this->options['rest']; //FIXME: Handle if is not set or if not exists!
                 
                 $file = fopen($filename, 'r');
@@ -282,7 +290,31 @@ class xs_documentation_plugin
                 
                 $document = $this->parser->parse($source);
                 
-                echo $document;
+                echo $document;*/
+        }
+        
+        function single($query)
+        {
+                $search = $this->db->get_by($query);
+                
+                if(count($search) != 1)
+                        return;
+                $single = $search[0];
+                
+                echo $single['id'];
+                echo $single['title'];
+                echo $single['text'];
+                echo $single['create_by'];
+                echo $single['create_date'];
+                echo $single['modify_date'];
+        }
+        
+        function main($array)
+        {
+                echo '<div class="product_list">';
+                foreach($array as $single)
+                        echo '<div class="product_list_item"><a href="?id='.$single['id'].'"><span>'.$single['title'].'</span></a></div>';
+                echo '</div>';
         }
         
 }
