@@ -60,6 +60,7 @@ class xs_documentation_plugin
                 }
                 
                 xs_framework::init_admin_style();
+                xs_framework::init_admin_script();
                 
                 echo "<div class=\"wrap\">";
                 echo "<h2>Documentation configuration</h2>";
@@ -87,6 +88,8 @@ class xs_documentation_plugin
         {
                 if(isset($input['new']))
                         $this->db->add($input['new']);
+                else if(isset($input['delete']))
+                        $this->db->remove($input['delete']);
                 else
                         $this->db->update_single($input, $input['id']);
 
@@ -245,13 +248,13 @@ class xs_documentation_plugin
                                 'text' => 'Show', 
                                 'return' => true
                         ));
-                        /*$actions .= xs_framework::create_button( array( 
-                                'name' => 'products[delete]', 
+                        $actions .= xs_framework::create_button( array( 
+                                'name' => 'xs_docs[delete]', 
                                 'class' => 'button-primary xs_full_width', 
                                 'value' => $docs[$i]['id'], 'text' => 'Remove', 
                                 'onclick'=>'return confirm_box()', 
                                 'return' => true
-                        ));*/
+                        ));
                         array_unshift($docs[$i], $actions);
                 }
                 
