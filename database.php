@@ -92,7 +92,7 @@ class xs_documentation_database
                         xs_documentation.lang AS lang,
                         xs_documentation.title AS title,
                         xs_documentation.text AS text,
-                        users_tbl.user_nicename AS create_by,
+                        users_tbl.display_name AS create_by,
                         FROM_UNIXTIME(xs_documentation.create_date) AS 'create_date',
                         FROM_UNIXTIME(xs_documentation.modify_date) AS 'modify_date'
                         FROM xs_documentation
@@ -134,7 +134,7 @@ class xs_documentation_database
                         xs_documentation.product AS product,
                         xs_documentation.lang AS lang,
                         xs_documentation.title AS title,
-                        users_tbl.user_nicename AS create_by,
+                        users_tbl.display_name AS create_by,
                         FROM_UNIXTIME(xs_documentation.create_date) AS 'create_date',
                         FROM_UNIXTIME(xs_documentation.modify_date) AS 'modify_date'
                         FROM xs_documentation
@@ -168,22 +168,6 @@ class xs_documentation_database
                 $result->close();
                 return $offset;
         }
-        
-        function get_users_name()
-        {
-                $user_table = $this->get_users_table();
-                $sql = "SELECT ID, user_nicename FROM ".$user_table;
-                        
-                $result = $this->execute_query($sql);
-                if ($result->num_rows > 0) {
-                        while ($row = $result->fetch_assoc()) {
-                                $offset[$row['ID']] = $row['user_nicename'];
-                        }
-                }
-                $result->close();
-                return $offset;
-        }
-        
         
         function add($input)
         {
