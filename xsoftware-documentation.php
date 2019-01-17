@@ -313,8 +313,6 @@ class xs_documentation_plugin
 
         function shortcode()
         {
-                wp_enqueue_style('xs_documentation_style', plugins_url('style/template.css', __FILE__));
-                
                 include $this->options['template_file'];
                 
                 $query = isset($_GET['id']) ? array('id' => $_GET['id']) : array();

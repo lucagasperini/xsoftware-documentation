@@ -1,10 +1,14 @@
 <?php
+        wp_enqueue_style('xs_documentation_style', plugins_url('style/template.css', __FILE__));
+        
         function docs_single($single)
         {
-                echo $single['text'];
-                echo $single['create_by'];
-                echo $single['create_date'];
-                echo $single['modify_date'];
+                echo '<div class="single-meta">';
+                echo '<span class="label">Created By: </span>'.$single['create_by'].'</br>';
+                echo '<span class="label">At: </span>'.$single['create_date'].'</br>';
+                echo '<span class="label">Last Edit: </span>'.$single['modify_date'].'</br>';
+                echo '</div>';
+                echo '<div class="c">'.$single['text'].'</div>';
         }
         
         function docs_main($array)
