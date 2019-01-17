@@ -30,3 +30,43 @@ h4 {
 h5 {
         font-size: 20px;
 }
+
+
+.css-treeview ul,
+.css-treeview li
+{
+        padding: 0;
+        margin: 0;
+        list-style: none;
+}
+
+.css-treeview li:hover
+{
+        background-color:#ffb342;
+}
+ 
+.css-treeview a
+{
+        margin: 0 0 0 32px;
+        text-decoration: none;
+        width: 100%;
+        display: block;
+        font-size: 16px;
+}
+.css-treeview a:hover
+{
+         color: #343131; 
+}
+ 
+.css-treeview
+{
+    background-color:#343131;
+}
+
+.css-treeview label
+{
+    color: #ffb342;
+    margin: 0 0 0 16px;
+    font-size: 20px;
+}
+

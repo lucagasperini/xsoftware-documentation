@@ -13,9 +13,20 @@
         
         function docs_main($array)
         {
-                echo '<div class="product_list">';
+
                 foreach($array as $single)
-                        echo '<div class="product_list_item"><a href="?id='.$single['id'].'"><span>'.$single['title'].'</span></a></div>';
-                echo '</div>';
+                {
+                        $docs[$single['product']][] = $single;
+                }
+                echo '<div class="css-treeview"><ul>';
+                foreach($docs as $product => $list)
+                {
+                        echo "<label>".$product."</label>";
+                        echo "<ul>";
+                        foreach($list as $s)
+                                echo "<li><a href=\"?id=".$s['id']."\">".$s['title']."</a></li>";
+                        echo "</ul>";
+                }
+                echo "</ul>";
         }
 ?>
