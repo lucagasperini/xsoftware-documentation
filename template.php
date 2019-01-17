@@ -1,8 +1,6 @@
 <?php
         function docs_single($single)
         {
-                echo $single['id'];
-                echo $single['title'];
                 echo $single['text'];
                 echo $single['create_by'];
                 echo $single['create_date'];
