@@ -109,7 +109,11 @@ class xs_documentation_plugin
         }
         function input_docs($input)
         {
-                $file_input = $_FILES["xs_docs"]["tmp_name"]["text"];
+                if(isset($_FILES["xs_docs"]["tmp_name"]["text"]))
+                        $file_input = $_FILES["xs_docs"]["tmp_name"]["text"];
+                else
+                        $file_input = '';
+                        
                 $document = '';
                 if(!empty($file_input))
                 {
@@ -144,14 +148,11 @@ class xs_documentation_plugin
                 }
                 
                 $get = array('id' => $_GET["edit"]);
-                
-                if($get == "new") {
+
+                if($get['id'] == "new")
                         $this->show_docs_add();
-                        return;
-                }
-                
-                $this->show_docs_edit_single($get);
-                return;
+                else
+                        $this->show_docs_edit_single($get);
         }
        
         public function show_docs_edit_single($id)
@@ -259,12 +260,12 @@ class xs_documentation_plugin
                 ));
                 
                 $data['text'][0] = 'Text:';
-                $data['text'][1] = xs_framework::create_textarea( array(
+                $data['text'][1] = xs_framework::create_upload_file( array(
                         'class' => 'xs_full_width', 
-                        'name' => 'xs_docs[new][text]',
+                        'name' => 'xs_docs[text]',
+                        'id' => 'xs_docs[text]',
                         'return' => true
                 ));
-                
                 
                 xs_framework::create_table(array('class' => 'xs_full_width', 'headers' => $headers, 'data' => $data ));
         }
