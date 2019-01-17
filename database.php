@@ -96,11 +96,9 @@ class xs_documentation_database
                         FROM_UNIXTIME(xs_documentation.create_date) AS 'create_date',
                         FROM_UNIXTIME(xs_documentation.modify_date) AS 'modify_date'
                         FROM xs_documentation
-                                JOIN xs_products
-                                ON xs_documentation.product = xs_products.name
                                 JOIN ".$user_table." AS users_tbl
                                 ON xs_documentation.create_by = users_tbl.ID
-                        WHERE xs_products.lang=xs_documentation.lang". $id . $product . $lang . $create_by;
+                        WHERE 1=1". $id . $product . $lang . $create_by;
 
                 $result = $this->execute_query($sql);
                 
@@ -138,11 +136,9 @@ class xs_documentation_database
                         FROM_UNIXTIME(xs_documentation.create_date) AS 'create_date',
                         FROM_UNIXTIME(xs_documentation.modify_date) AS 'modify_date'
                         FROM xs_documentation
-                                JOIN xs_products
-                                ON xs_documentation.product = xs_products.name
                                 JOIN ".$user_table." AS users_tbl
                                 ON xs_documentation.create_by = users_tbl.ID
-                        WHERE xs_products.lang=xs_documentation.lang". $id . $product . $lang . $create_by;
+                        WHERE 1=1". $id . $product . $lang . $create_by;
 
                 $result = $this->execute_query($sql);
                 

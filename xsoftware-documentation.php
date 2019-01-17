@@ -27,7 +27,6 @@ class xs_documentation_plugin
         {
                 add_action("admin_menu", array($this, "admin_menu"));
                 add_action("admin_init", array($this, "section_menu"));
-                //delete_option('xs_docs');
                 $this->options = get_option('xs_options_docs', $this->default);
                 $this->db = new xs_documentation_database();
                 
@@ -133,7 +132,8 @@ class xs_documentation_plugin
                 }
                 else if(isset($input['id'])){
                         $input['text'] = $document;
-                        var_dump($input);
+                        if(empty($input['text']))
+                                unset($input['text']);
                         $this->db->update_single($input, $input['id']);
                 }
                 unset($input);
@@ -169,6 +169,7 @@ class xs_documentation_plugin
                 $doc = $docs[0];
                
                 $products = $this->db->get_products_name();
+                $products['common'] = 'common';
                 $data = array();
                 
                 $data['id'][0] = 'ID:';
@@ -231,6 +232,7 @@ class xs_documentation_plugin
                 $fields = $this->db->get_fields(array('id'));
                 $size_fields = count($fields);
                 $products = $this->db->get_products_name();
+                $products['common'] = 'common'; //FIXME:rework products name
                 
                 $headers = array('Field', 'Value');
                 $data = array();
