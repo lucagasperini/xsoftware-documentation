@@ -20,18 +20,15 @@ class xs_documentation_plugin
         private $default = array( 'template_file' => 'template.php' );
         
         private $options = NULL;
-        
-        private $parser = NULL;
+       
         private $db = NULL;
 
         public function __construct()
         {
                 add_action("admin_menu", array($this, "admin_menu"));
                 add_action("admin_init", array($this, "section_menu"));
-                $this->parser = new Gregwar\RST\Parser;
-                // Using parser
-                $this->parser->getEnvironment()->getErrorManager()->abortOnError(false);
-                $this->options = get_option('xs_docs', $this->default);
+                //delete_option('xs_docs');
+                $this->options = get_option('xs_options_docs', $this->default);
                 $this->db = new xs_documentation_database();
                 
                 add_shortcode( 'xsoftware_documentation', array($this, 'shortcode') );
@@ -67,18 +64,18 @@ class xs_documentation_plugin
                 
                 echo '<form action="options.php" method="post">';
 
-                settings_fields('setting_docs_globals');
-                do_settings_sections('docs_globals');
+                settings_fields('doc_setting_globals');
+                do_settings_sections('doc_globals');
 
-                submit_button( '', 'primary', 'globals', true, NULL );
+                submit_button( '', 'primary', 'submit', true, NULL );
                 echo '</form>';
                 
-                echo "<form action=\"options.php\" method=\"post\">";
+                echo "<form enctype=\"multipart/form-data\" action=\"options.php\" method=\"post\">";
                
                 settings_fields('setting_docs');
                 do_settings_sections('docs');
                 
-                submit_button( '', 'primary', 'xs_docs', true, NULL );
+                submit_button( '', 'primary', 'submit', true, NULL );
                 
                 echo "</form>";
                 
@@ -87,39 +84,56 @@ class xs_documentation_plugin
         
         function section_menu()
         {
-                register_setting( 'setting_docs_globals', 'xs_docs_globals', array($this, 'input_globals') );
-                add_settings_section( 'section_docs_globals', 'Global settings', array($this, 'show_globals'), 'docs_globals' );
+                register_setting( 'doc_setting_globals', 'xs_options_docs', array($this, 'input_doc_globals') );
+                add_settings_section( 'doc_section_globals', 'Global settings', array($this, 'show_doc_globals'), 'doc_globals' );
                 
                 register_setting( 'setting_docs', 'xs_docs', array($this, 'input_docs') );
                 add_settings_section( 'section_docs', 'Documentation', array($this, 'show_docs'), 'docs' );
         }
         
-        function input_globals($input)
+        function input_doc_globals($input)
         {
                 $input['template_file'] = sanitize_text_field( $input['template_file'] );
                 return $input;
         }
         
-        function show_globals()
+        function show_doc_globals()
         {
-                $settings_field = array('value' => $this->options['template_file'], 'name' => 'xs_docs_globals[template_file]');
+                $settings_field = array('value' => $this->options['template_file'], 'name' => 'xs_options_docs[template_file]');
                 add_settings_field($settings_field['name'], 
                 'Template file path:',
                 'xs_framework::create_input',
-                'docs_globals',
-                'section_docs_globals',
+                'doc_globals',
+                'doc_section_globals',
                 $settings_field);
         }
         function input_docs($input)
         {
-                if(isset($input['new']))
+                $file_input = $_FILES["xs_docs"]["tmp_name"]["text"];
+                $document = '';
+                if(!empty($file_input))
+                {
+                        $parser = new Gregwar\RST\Parser;
+                        $file = fopen($file_input, 'r');
+                        $source = fread($file, filesize($file_input));
+                        
+                        $document = $parser->parse($source);
+                }
+                
+                if(isset($input['new'])) {
+                        $input['new']['text'] = $document;
                         $this->db->add($input['new']);
-                else if(isset($input['delete']))
+                }
+                else if(isset($input['delete']))  {
                         $this->db->remove($input['delete']);
-                else
+                }
+                else if(isset($input['id'])){
+                        $input['text'] = $document;
+                        var_dump($input);
                         $this->db->update_single($input, $input['id']);
-
+                }
                 unset($input);
+                return;
         }
         
         function show_docs()
@@ -193,12 +207,13 @@ class xs_documentation_plugin
                 ));
                 
                 $data['text'][0] = 'Text:';
-                $data['text'][1] = xs_framework::create_textarea( array(
+                $data['text'][1] = xs_framework::create_upload_file( array(
                         'class' => 'xs_full_width', 
                         'name' => 'xs_docs[text]',
-                        'text'=> $doc['text'],
+                        'id' => 'xs_docs[text]',
                         'return' => true
                 ));
+               
                 
                 $headers = array('Field', 'Value');
                 xs_framework::create_table(array('class' => 'xs_full_width', 'headers' => $headers, 'data' => $data ));
@@ -263,7 +278,7 @@ class xs_documentation_plugin
                         'text' => 'Add'
                 ));
                        
-                $docs = $this->db->get();
+                $docs = $this->db->get_meta();
                
                 
                 for($i = 0; $i < count($docs); $i++) {
@@ -288,7 +303,6 @@ class xs_documentation_plugin
                 $fields[] = "Product";
                 $fields[] = "Language";
                 $fields[] = "Title";
-                $fields[] = "Text";
                 $fields[] = "Created By";
                 $fields[] = "Created at";
                 $fields[] = "Last edit on";
@@ -313,15 +327,6 @@ class xs_documentation_plugin
                 else
                         wp_die();
 
-                /*
-                $filename = __DIR__ . $this->options['rest']; //FIXME: Handle if is not set or if not exists!
-                
-                $file = fopen($filename, 'r');
-                $source = fread($file, filesize($filename));
-                
-                $document = $this->parser->parse($source);
-                
-                echo $document;*/
         }
         
 }

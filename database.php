@@ -112,6 +112,48 @@ class xs_documentation_database
                 $result->close();
                 return $offset;
         }
+        function get_meta($query = array()) 
+        {
+                $default = array(
+                        'id' => '', 
+                        'product' => '', 
+                        'lang' => '', 
+                        'create_by' => '',
+                );
+                
+                $query += $default;
+                
+                $id = empty($query['id']) ? '' : ' AND xs_documentation.id="'.sanitize_text_field($query['id']).'"';
+                $product = empty($query['product']) ? '' : ' AND xs_documentation.product="'.sanitize_text_field($query['product']).'"';
+                $lang = empty($query['lang']) ? '' : ' AND xs_documentation.lang="'.sanitize_text_field($query['lang']).'"';
+                $create_by = empty($query['create_by']) ? '' : ' AND xs_documentation.create_by="'.sanitize_text_field($query['create_by']).'"';
+                $offset = array();
+                
+                $user_table = $this->get_users_table();
+                $sql = "SELECT xs_documentation.id AS id, 
+                        xs_documentation.product AS product,
+                        xs_documentation.lang AS lang,
+                        xs_documentation.title AS title,
+                        users_tbl.user_nicename AS create_by,
+                        FROM_UNIXTIME(xs_documentation.create_date) AS 'create_date',
+                        FROM_UNIXTIME(xs_documentation.modify_date) AS 'modify_date'
+                        FROM xs_documentation
+                                JOIN xs_products
+                                ON xs_documentation.product = xs_products.name
+                                JOIN ".$user_table." AS users_tbl
+                                ON xs_documentation.create_by = users_tbl.ID
+                        WHERE xs_products.lang=xs_documentation.lang". $id . $product . $lang . $create_by;
+
+                $result = $this->execute_query($sql);
+                
+                if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                                $offset[]= $row;
+                        }
+                }
+                $result->close();
+                return $offset;
+        }
         
         function get_products_name()
         {
