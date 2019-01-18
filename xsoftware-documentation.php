@@ -152,10 +152,10 @@ class xs_documentation_plugin
                 if($get['id'] == "new")
                         $this->show_docs_add();
                 else
-                        $this->show_docs_edit_single($get);
+                        $this->show_docs_edit($get);
         }
        
-        public function show_docs_edit_single($id)
+        public function show_docs_edit($id)
         {
                 xs_framework::create_link( array(
                         'href' => 'admin.php?page=xsoftware_documentation', 
@@ -288,7 +288,7 @@ class xs_documentation_plugin
                         $actions = xs_framework::create_link( array(
                                 'href' => 'admin.php?page=xsoftware_documentation&edit='.$docs[$i]['id'], 
                                 'class' => 'button-primary xs_full_width xs_text_center', 
-                                'text' => 'Show', 
+                                'text' => 'Edit', 
                                 'return' => true
                         ));
                         $actions .= xs_framework::create_button( array( 
