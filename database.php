@@ -198,8 +198,6 @@ class xs_documentation_database
                 modify_date
                 ) VALUES (?,?,?,?,?,?,?,?)';
                 
-                var_dump($input);
-                
                 $query = $this->conn->prepare($sql);
                 
                 if($query === false) {
@@ -207,7 +205,7 @@ class xs_documentation_database
                 }
                 
                 $query->bind_param(
-                "ssssiii", 
+                "sssssiii", 
                 $input['name'],
                 $input['product'],
                 $input['lang'],
