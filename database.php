@@ -153,12 +153,12 @@ class xs_documentation_database
         
         function get_products_name()
         {
-                $sql = "SELECT name FROM xs_products WHERE lang='en'"; //FIXME: FORCE LANG EN
+                $sql = "SELECT name,title FROM xs_products WHERE lang='en'"; //FIXME: FORCE LANG EN
                         
                 $result = $this->execute_query($sql);
                 if ($result->num_rows > 0) {
                         while ($row = $result->fetch_assoc()) {
-                                $offset[$row['name']] = $row['name'];
+                                $offset[$row['name']] = $row['title'];
                         }
                 }
                 $result->close();

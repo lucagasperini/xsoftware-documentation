@@ -17,7 +17,11 @@ include 'database.php';
 class xs_documentation_plugin
 {
         
-        private $default = array( 'template_file' => 'template.php' );
+        private $default = array( 
+                                'template_file' => 'template.php',
+                                'product_list' => array('common' => 'Common'),
+                                'import_products' => FALSE,
+                                );
         
         private $options = NULL;
        
@@ -84,7 +88,7 @@ class xs_documentation_plugin
         function section_menu()
         {
                 register_setting( 'doc_setting_globals', 'xs_options_docs', array($this, 'input_doc_globals') );
-                add_settings_section( 'doc_section_globals', 'Global settings', array($this, 'show_doc_globals'), 'doc_globals' );
+                add_settings_section( 'doc_section_globals', 'Globals settings', array($this, 'show_doc_globals'), 'doc_globals' );
                 
                 register_setting( 'setting_docs', 'xs_docs', array($this, 'input_docs') );
                 add_settings_section( 'section_docs', 'Documentation', array($this, 'show_docs'), 'docs' );
@@ -93,11 +97,55 @@ class xs_documentation_plugin
         function input_doc_globals($input)
         {
                 $input['template_file'] = sanitize_text_field( $input['template_file'] );
+                
+                $input['product_list'] = $this->options['product_list'];
+                
+                if($input['import_products'] == TRUE) { //"on" by default
+                        $input['import_products'] = TRUE;
+                        $input['product_list'] += $this->db->get_products_name();
+                }
+               
+                if(isset($input['key']) && isset($input['text'])){
+                        $input['product_list'][$input['key']] = $input['text'];
+                }
+                
                 return $input;
         }
         
         function show_doc_globals()
         {
+                $data = array();
+                $headers = array('Key', 'Text');
+                
+                foreach($this->options['product_list'] as $key => $text) {
+                        $data[$key][0] = $key;
+                        $data[$key][1] = $text;
+                }
+                
+                $input_key = xs_framework::create_input( array(
+                                'class' => 'xs_full_width', 
+                                'name' => 'xs_options_docs[key]',
+                                'return' => true
+                                ));
+                                
+                $input_text = xs_framework::create_input( array(
+                                'class' => 'xs_full_width', 
+                                'name' => 'xs_options_docs[text]',
+                                'return' => true
+                                ));
+                                
+                $data[] = array( 0 => $input_key, 1 => $input_text);
+                        
+                xs_framework::create_table(array('class' => 'xs_full_width', 'headers' => $headers, 'data' => $data ));
+                
+                $settings_field = array('value' => $this->options['import_products'], 'name' => 'xs_options_docs[import_products]', 'compare' => TRUE);
+                add_settings_field($settings_field['name'], 
+                'Import from XSoftware Products:',
+                'xs_framework::create_input_checkbox',
+                'doc_globals',
+                'doc_section_globals',
+                $settings_field);
+                
                 $settings_field = array('value' => $this->options['template_file'], 'name' => 'xs_options_docs[template_file]');
                 add_settings_field($settings_field['name'], 
                 'Template file path:',
@@ -105,7 +153,9 @@ class xs_documentation_plugin
                 'doc_globals',
                 'doc_section_globals',
                 $settings_field);
+                
         }
+        
         function input_docs($input)
         {
                 if(isset($_FILES["xs_docs"]["tmp_name"]["text"]))
@@ -168,8 +218,7 @@ class xs_documentation_plugin
                         return;
                 $doc = $docs[0];
                
-                $products = $this->db->get_products_name();
-                $products['common'] = 'common';
+                $products = $this->options['product_list'];
                 $data = array();
                 
                 $data['id'][0] = 'ID:';
@@ -205,6 +254,7 @@ class xs_documentation_plugin
                         'name' => 'xs_docs[product]',
                         'data'=> $products,
                         'selected' => $doc['product'],
+                        'compare_key' => TRUE,
                         'return' => true
                 ));
                 
@@ -231,8 +281,7 @@ class xs_documentation_plugin
                 
                 $fields = $this->db->get_fields(array('id'));
                 $size_fields = count($fields);
-                $products = $this->db->get_products_name();
-                $products['common'] = 'common'; //FIXME:rework products name
+                $products = $this->options['product_list'];
                 
                 $headers = array('Field', 'Value');
                 $data = array();
@@ -288,7 +337,8 @@ class xs_documentation_plugin
                         $actions = xs_framework::create_link( array(
                                 'href' => 'admin.php?page=xsoftware_documentation&edit='.$docs[$i]['id'], 
                                 'class' => 'button-primary xs_full_width xs_text_center', 
-                                'text' => 'Edit', 
+                                'text' => 'Edit
+                                ', 
                                 'return' => true
                         ));
                         $actions .= xs_framework::create_button( array( 
