@@ -28,6 +28,7 @@ class xs_documentation_database
                 if($result === FALSE)
                         $this->conn->query("CREATE TABLE xs_documentation ( 
                                 `id` INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                                `name` VARCHAR(64) NOT NULL,
                                 `product` VARCHAR(64) NOT NULL,
                                 `lang` VARCHAR(16) NOT NULL,
                                 `title` VARCHAR(64) NOT NULL,
@@ -52,7 +53,7 @@ class xs_documentation_database
         function get_fields($skip = NULL)
         {
                 $offset = array();
-                $fields = array('id','product','lang','title','text','create_by','create_date','modify_date');
+                $fields = array('id','name','product','lang','title','text','create_by','create_date','modify_date');
                 if(empty($skip)) 
                         return $fields;
                         
@@ -88,6 +89,7 @@ class xs_documentation_database
                 
                 $user_table = $this->get_users_table();
                 $sql = "SELECT xs_documentation.id AS id, 
+                        xs_documentation.name AS name,
                         xs_documentation.product AS product,
                         xs_documentation.lang AS lang,
                         xs_documentation.title AS title,
@@ -128,7 +130,8 @@ class xs_documentation_database
                 $offset = array();
                 
                 $user_table = $this->get_users_table();
-                $sql = "SELECT xs_documentation.id AS id, 
+                $sql = "SELECT xs_documentation.id AS id,
+                        xs_documentation.name AS name,
                         xs_documentation.product AS product,
                         xs_documentation.lang AS lang,
                         xs_documentation.title AS title,
@@ -235,7 +238,7 @@ class xs_documentation_database
                 $single['modify_date'] = time();
 
 
-                $sql = 'UPDATE xs_documentation SET product=?,lang=?,title=?,text=?,modify_date=? WHERE id=?';
+                $sql = 'UPDATE xs_documentation SET name=?,product=?,lang=?,title=?,text=?,modify_date=? WHERE id=?';
                 
                 $query = $this->conn->prepare($sql);
                 
@@ -243,7 +246,8 @@ class xs_documentation_database
                         trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $this->conn->errno . ' ' . $this->conn->error, E_USER_ERROR);
                 }
                 $query->bind_param(
-                        "ssssii", 
+                        "sssssii", 
+                        $single['name'],
                         $single['product'], 
                         $single['lang'],
                         $single['title'],

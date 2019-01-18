@@ -217,16 +217,22 @@ class xs_documentation_plugin
                 if(count($docs) != 1)
                         return;
                 $doc = $docs[0];
+                
+                xs_framework::create_input( array(
+                        'class' => 'xs_full_width', 
+                        'name' => 'xs_docs[id]',
+                        'value'=> $doc['id'],
+                        'type' => 'hidden'
+                ));
                
                 $products = $this->options['product_list'];
                 $data = array();
                 
-                $data['id'][0] = 'ID:';
-                $data['id'][1] = xs_framework::create_input( array(
+                $data['name'][0] = 'Name:';
+                $data['name'][1] = xs_framework::create_textarea( array(
                         'class' => 'xs_full_width', 
-                        'name' => 'xs_docs[id]',
-                        'value'=> $doc['id'],
-                        'readonly' => true,
+                        'text'=> $doc['name'],
+                        'name' => 'xs_docs[name]',
                         'return' => true
                 ));
                 
@@ -285,6 +291,13 @@ class xs_documentation_plugin
                 
                 $headers = array('Field', 'Value');
                 $data = array();
+                
+                $data['name'][0] = 'Name:';
+                $data['name'][1] = xs_framework::create_textarea( array(
+                        'class' => 'xs_full_width', 
+                        'name' => 'xs_docs[new][name]',
+                        'return' => true
+                ));
                
                 $data['product'][0] = 'Product:';
                 $data['product'][1] = xs_framework::create_select( array(
@@ -353,6 +366,7 @@ class xs_documentation_plugin
                 
                 $fields[] = "Actions";
                 $fields[] = "ID";
+                $fields[] = "Name";
                 $fields[] = "Product";
                 $fields[] = "Language";
                 $fields[] = "Title";
