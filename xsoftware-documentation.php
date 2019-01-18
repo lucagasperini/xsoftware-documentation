@@ -371,8 +371,11 @@ class xs_documentation_plugin
                 
                 $search = $this->db->get($query);
                 
-                if(count($search) > 1)
+                if(count($search) > 1) {
+                        for($i = 0; $i < count($search);$i++)
+                                $search[$i]['product'] = $this->options['product_list'][$search[$i]['product']];
                         docs_main($search);
+                }
                 else if(count($search) == 1)
                         docs_single($search[0]);
                 else
