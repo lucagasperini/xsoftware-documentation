@@ -24,7 +24,7 @@
                         echo "<label>".$product."</label>";
                         echo "<ul>";
                         foreach($list as $s)
-                                echo "<li><a href=\"?id=".$s['id']."\">".$s['title']."</a></li>";
+                                echo "<li><a href=\"?doc=".$s['name']."\">".$s['title']."</a></li>";
                         echo "</ul>";
                 }
                 echo "</ul>";

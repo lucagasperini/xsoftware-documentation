@@ -74,6 +74,7 @@ class xs_documentation_database
         {
                 $default = array(
                         'id' => '', 
+                        'name' => '',
                         'product' => '', 
                         'lang' => '', 
                         'create_by' => '',
@@ -82,6 +83,7 @@ class xs_documentation_database
                 $query += $default;
                 
                 $id = empty($query['id']) ? '' : ' AND xs_documentation.id="'.sanitize_text_field($query['id']).'"';
+                $name = empty($query['name']) ? '' : ' AND xs_documentation.name="'.sanitize_text_field($query['name']).'"';
                 $product = empty($query['product']) ? '' : ' AND xs_documentation.product="'.sanitize_text_field($query['product']).'"';
                 $lang = empty($query['lang']) ? '' : ' AND xs_documentation.lang="'.sanitize_text_field($query['lang']).'"';
                 $create_by = empty($query['create_by']) ? '' : ' AND xs_documentation.create_by="'.sanitize_text_field($query['create_by']).'"';
@@ -100,7 +102,7 @@ class xs_documentation_database
                         FROM xs_documentation
                                 JOIN ".$user_table." AS users_tbl
                                 ON xs_documentation.create_by = users_tbl.ID
-                        WHERE 1=1". $id . $product . $lang . $create_by;
+                        WHERE 1=1". $id . $name . $product . $lang . $create_by;
 
                 $result = $this->execute_query($sql);
                 
@@ -116,6 +118,7 @@ class xs_documentation_database
         {
                 $default = array(
                         'id' => '', 
+                        'name' => '',
                         'product' => '', 
                         'lang' => '', 
                         'create_by' => '',
@@ -124,6 +127,7 @@ class xs_documentation_database
                 $query += $default;
                 
                 $id = empty($query['id']) ? '' : ' AND xs_documentation.id="'.sanitize_text_field($query['id']).'"';
+                $name = empty($query['name']) ? '' : ' AND xs_documentation.name="'.sanitize_text_field($query['name']).'"';
                 $product = empty($query['product']) ? '' : ' AND xs_documentation.product="'.sanitize_text_field($query['product']).'"';
                 $lang = empty($query['lang']) ? '' : ' AND xs_documentation.lang="'.sanitize_text_field($query['lang']).'"';
                 $create_by = empty($query['create_by']) ? '' : ' AND xs_documentation.create_by="'.sanitize_text_field($query['create_by']).'"';
@@ -141,7 +145,7 @@ class xs_documentation_database
                         FROM xs_documentation
                                 JOIN ".$user_table." AS users_tbl
                                 ON xs_documentation.create_by = users_tbl.ID
-                        WHERE 1=1". $id . $product . $lang . $create_by;
+                        WHERE 1=1". $id . $name . $product . $lang . $create_by;
 
                 $result = $this->execute_query($sql);
                 

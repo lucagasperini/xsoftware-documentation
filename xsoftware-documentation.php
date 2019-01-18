@@ -377,12 +377,12 @@ class xs_documentation_plugin
                 xs_framework::create_table(array('headers' => $fields, 'data' => $docs));
         }
 
-        function shortcode()
+        function shortcode($attr)
         {
                 include $this->options['template_file'];
-                
-                $query = isset($_GET['id']) ? array('id' => $_GET['id']) : array();
-                
+                shortcode_atts( array( 'lang' => ''), $attr );
+              
+                $query = isset($_GET['doc']) ? array('name' => $_GET['doc'], 'lang' => $attr['lang']) : array('lang' => $attr['lang']);
                 $search = $this->db->get($query);
                 
                 if(count($search) > 1) {
@@ -394,7 +394,6 @@ class xs_documentation_plugin
                         docs_single($search[0]);
                 else
                         wp_die();
-
         }
         
 }
