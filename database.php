@@ -176,6 +176,7 @@ class xs_documentation_database
         {
                 $default = array(
                         'product' => NULL, 
+                        'name' => '',
                         'lang' => NULL,
                         'title' => NULL,
                         'text' => '',
@@ -187,6 +188,7 @@ class xs_documentation_database
                 $input += $default;
                 
                 $sql = 'INSERT INTO xs_documentation (
+                name,
                 product, 
                 lang,
                 title, 
@@ -194,7 +196,7 @@ class xs_documentation_database
                 create_by,
                 create_date, 
                 modify_date
-                ) VALUES (?,?,?,?,?,?,?)';
+                ) VALUES (?,?,?,?,?,?,?,?)';
                 
                 var_dump($input);
                 
@@ -206,6 +208,7 @@ class xs_documentation_database
                 
                 $query->bind_param(
                 "ssssiii", 
+                $input['name'],
                 $input['product'],
                 $input['lang'],
                 $input['title'], 
