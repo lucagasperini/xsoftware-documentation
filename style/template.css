@@ -40,34 +40,6 @@ h5 {
         list-style: none;
 }
 
-.css-treeview li:hover
-{
-        background-color:#ffb342;
-}
- 
-.css-treeview a,
-.css-treeview a:visited,
-.css-treeview a:active,
-.css-treeview a:link,
-.css-treeview a:focus
-{
-        color: #ffb342;
-        margin: 0 0 0 32px;
-        text-decoration: none;
-        width: 100%;
-        display: block;
-        font-size: 16px;
-        -webkit-transition: all 0.0s ease-in-out;
-        -moz-transition: all 0.0s ease-in-out;
-        -ms-transition: all 0.0s ease-in-out;
-        -o-transition: all 0.0s ease-in-out;
-        transition: all 0.0s ease-in-out;
-}
-.css-treeview a:hover
-{
-         color: #343131; 
-}
- 
 .css-treeview
 {
     background-color:#343131;
@@ -80,3 +52,23 @@ h5 {
     font-size: 20px;
 }
 
+.download-link {
+        float:right;
+}
+
+.row {
+        width:100%;
+}
+
+.row > a
+{
+        color: #ffb342;
+        margin: 0 0 0 64px;
+        text-decoration: none;
+        font-size: 16px;
+        -webkit-transition: all 0.0s ease-in-out;
+        -moz-transition: all 0.0s ease-in-out;
+        -ms-transition: all 0.0s ease-in-out;
+        -o-transition: all 0.0s ease-in-out;
+        transition: all 0.0s ease-in-out;
+}
