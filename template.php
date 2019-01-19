@@ -3,6 +3,7 @@
         
         function docs_single($single)
         {
+                echo '<a href="?doc='.$single['name'].'&cat='.$single['product'].'&download">Download</a>';
                 echo '<div class="single-meta">';
                 echo '<span class="label">Created By: </span>'.$single['create_by'].'</br>';
                 echo '<span class="label">At: </span>'.$single['create_date'].'</br>';

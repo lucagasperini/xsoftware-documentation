@@ -423,14 +423,35 @@ class xs_documentation_plugin
                         array('name' => $_GET['doc'], 'product' => $_GET['cat'], 'lang' => $attr['lang']) : 
                         array('lang' => $attr['lang']);
                         
+                $download = isset($_GET['download']);
+                
                 $search = $this->db->get($query);
                 
                 if(count($search) > 1)
                         docs_main($search, $this->options['product_list']);
-                else if(count($search) == 1)
+                else if(count($search) == 1) {
                         docs_single($search[0]);
+                        if($download == TRUE)
+                                $this->download_docs($search[0]['file']);
+                                
+                }
                 else
                         wp_die();
+        }
+        
+        function download_docs($file)
+        {
+                if (file_exists($file)) {
+                        header('Content-Description: File Transfer');
+                        header('Content-Type: application/octet-stream');
+                        header('Content-Disposition: attachment; filename="'.basename($file).'"');
+                        header('Expires: 0');
+                        header('Cache-Control: must-revalidate');
+                        header('Pragma: public');
+                        header('Content-Length: ' . filesize($file));
+                        readfile($file);
+                        exit;
+                }
         }
         
 }
