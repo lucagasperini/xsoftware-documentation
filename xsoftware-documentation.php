@@ -97,15 +97,18 @@ class xs_documentation_plugin
         function input_doc_globals($input)
         {
                 $input['template_file'] = sanitize_text_field( $input['template_file'] );
-                
                 $input['product_list'] = $this->options['product_list'];
+                
+                $new_key = isset($input['key']) ? $input['key'] : '';
+                $new_text = isset($input['text']) ? $input['text'] : '';
                 
                 if($input['import_products'] == TRUE) { //"on" by default
                         $input['import_products'] = TRUE;
                         $input['product_list'] += $this->db->get_products_name();
+                        unset($input['import_products']);
                 }
                
-                if(isset($input['key']) && isset($input['text'])){
+                if(!empty($new_key) && !empty($new_text)){
                         $input['product_list'][$input['key']] = $input['text'];
                 }
                 
@@ -138,7 +141,9 @@ class xs_documentation_plugin
                         
                 xs_framework::create_table(array('class' => 'xs_full_width', 'headers' => $headers, 'data' => $data ));
                 
-                $settings_field = array('value' => $this->options['import_products'], 'name' => 'xs_options_docs[import_products]', 'compare' => TRUE);
+                //FIXME: Better a button to handle import!
+                $import_products = isset($this->options['import_products']) ? $this->options['import_products'] : FALSE; 
+                $settings_field = array('value' => $import_products, 'name' => 'xs_options_docs[import_products]', 'compare' => TRUE);
                 add_settings_field($settings_field['name'], 
                 'Import from XSoftware Products:',
                 'xs_framework::create_input_checkbox',
