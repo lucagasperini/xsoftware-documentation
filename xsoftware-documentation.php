@@ -29,6 +29,7 @@ class xs_documentation_plugin
 
         public function __construct()
         {
+                ob_start();
                 add_action("admin_menu", array($this, "admin_menu"));
                 add_action("admin_init", array($this, "section_menu"));
                 $this->options = get_option('xs_options_docs', $this->default);
@@ -442,6 +443,8 @@ class xs_documentation_plugin
         function download_docs($file)
         {
                 if (file_exists($file)) {
+                        ob_end_clean();
+                        ob_start();
                         header('Content-Description: File Transfer');
                         header('Content-Type: application/octet-stream');
                         header('Content-Disposition: attachment; filename="'.basename($file).'"');
