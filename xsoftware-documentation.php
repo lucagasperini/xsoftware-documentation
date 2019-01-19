@@ -173,7 +173,7 @@ class xs_documentation_plugin
                 {
                         $doc_dir = WP_CONTENT_DIR . '/documentation/';
                         if(is_dir($doc_dir) === FALSE)
-                                mkdir($doc_dir, 0744);
+                                mkdir($doc_dir, 0774);
                         
                         if(isset($input['lang']))
                                 $lang_dir = $doc_dir . $input['lang'] . '/';
@@ -181,7 +181,7 @@ class xs_documentation_plugin
                                 $lang_dir = $doc_dir . $input['new']['lang'] . '/';
                         
                         if(is_dir($lang_dir) === FALSE)
-                                mkdir($lang_dir, 0744);
+                                mkdir($lang_dir, 0774);
                                 
                         $target_file = $lang_dir . basename($file_input["name"]['text']);
                         if(move_uploaded_file($file_input["tmp_name"]['text'], $target_file) !== TRUE)
