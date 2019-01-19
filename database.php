@@ -33,6 +33,7 @@ class xs_documentation_database
                                 `lang` VARCHAR(16) NOT NULL,
                                 `title` VARCHAR(64) NOT NULL,
                                 `text` TEXT NOT NULL,
+                                `file` VARCHAR(256) NOT NULL,
                                 `create_by` INT(11) NOT NULL,
                                 `create_date` INT(11) NOT NULL,
                                 `modify_date` INT(11) NOT NULL
@@ -96,6 +97,7 @@ class xs_documentation_database
                         xs_documentation.lang AS lang,
                         xs_documentation.title AS title,
                         xs_documentation.text AS text,
+                        xs_documentation.file AS file,
                         users_tbl.display_name AS create_by,
                         FROM_UNIXTIME(xs_documentation.create_date) AS 'create_date',
                         FROM_UNIXTIME(xs_documentation.modify_date) AS 'modify_date'
@@ -139,6 +141,7 @@ class xs_documentation_database
                         xs_documentation.product AS product,
                         xs_documentation.lang AS lang,
                         xs_documentation.title AS title,
+                        xs_documentation.file AS file,
                         users_tbl.display_name AS create_by,
                         FROM_UNIXTIME(xs_documentation.create_date) AS 'create_date',
                         FROM_UNIXTIME(xs_documentation.modify_date) AS 'modify_date'
@@ -180,6 +183,7 @@ class xs_documentation_database
                         'lang' => NULL,
                         'title' => NULL,
                         'text' => '',
+                        'file' => '',
                         'create_by' => get_current_user_id(),
                         'modify_date' => time(), 
                         'create_date' => time()
@@ -193,10 +197,11 @@ class xs_documentation_database
                 lang,
                 title, 
                 text, 
+                file,
                 create_by,
                 create_date, 
                 modify_date
-                ) VALUES (?,?,?,?,?,?,?,?)';
+                ) VALUES (?,?,?,?,?,?,?,?,?)';
                 
                 $query = $this->conn->prepare($sql);
                 
@@ -205,12 +210,13 @@ class xs_documentation_database
                 }
                 
                 $query->bind_param(
-                "sssssiii", 
+                "ssssssiii", 
                 $input['name'],
                 $input['product'],
                 $input['lang'],
                 $input['title'], 
                 $input['text'],
+                $input['file'],
                 $input['create_by'],
                 $input['create_date'], 
                 $input['modify_date']
@@ -233,7 +239,7 @@ class xs_documentation_database
         function update_single($single, $id)
         {
                 $id = sanitize_text_field($id);
-                $sql = "SELECT * FROM xs_documentation WHERE id=". $id ;
+                $sql = "SELECT name,product,lang,title,text,modify_date FROM xs_documentation WHERE id=". $id ;
 
                 $result = $this->execute_query($sql);
                 $default = $result->fetch_assoc();
