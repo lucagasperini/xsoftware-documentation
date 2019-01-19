@@ -417,15 +417,16 @@ class xs_documentation_plugin
         {
                 include $this->options['template_file'];
                 shortcode_atts( array( 'lang' => ''), $attr );
-              
-                $query = isset($_GET['doc']) ? array('name' => $_GET['doc'], 'lang' => $attr['lang']) : array('lang' => $attr['lang']);
+                
+                //FIXME: AVOID TO USE SPACE ON PRODUCT!
+                $query = isset($_GET['doc']) && isset($_GET['cat'])  ? 
+                        array('name' => $_GET['doc'], 'product' => $_GET['cat'], 'lang' => $attr['lang']) : 
+                        array('lang' => $attr['lang']);
+                        
                 $search = $this->db->get($query);
                 
-                if(count($search) > 1) {
-                        for($i = 0; $i < count($search);$i++)
-                                $search[$i]['product'] = $this->options['product_list'][$search[$i]['product']];
-                        docs_main($search);
-                }
+                if(count($search) > 1)
+                        docs_main($search, $this->options['product_list']);
                 else if(count($search) == 1)
                         docs_single($search[0]);
                 else

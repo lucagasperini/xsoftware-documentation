@@ -11,7 +11,7 @@
                 echo '<div class="c">'.$single['text'].'</div>';
         }
         
-        function docs_main($array)
+        function docs_main($array, $cats)
         {
 
                 foreach($array as $single)
@@ -21,10 +21,10 @@
                 echo '<div class="css-treeview"><ul>';
                 foreach($docs as $product => $list)
                 {
-                        echo "<label>".$product."</label>";
+                        echo "<label>".$cats[$product]."</label>";
                         echo "<ul>";
                         foreach($list as $s)
-                                echo "<li><a href=\"?doc=".$s['name']."\">".$s['title']."</a></li>";
+                                echo "<li><a href=\"?doc=".$s['name']."&cat=".$s['product']."\">".$s['title']."</a></li>";
                         echo "</ul>";
                 }
                 echo "</ul>";
