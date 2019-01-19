@@ -163,33 +163,48 @@ class xs_documentation_plugin
         
         function input_docs($input)
         {
-                if(isset($_FILES["xs_docs"]["tmp_name"]["text"]))
-                        $file_input = $_FILES["xs_docs"];
+                if(isset($_FILES["xs_docs"]["tmp_name"]["text"])) {
+                        $file_input = $_FILES["xs_docs"]["tmp_name"]['text'];
+                        $file_basename = basename($_FILES["xs_docs"]["name"]['text']);
+                }
                 else
                         $file_input = '';
                         
                 $document = '';
-                if(!empty($file_input))
+                if(!empty($file_input)) //FIXME: Add a file check!
                 {
                         $doc_dir = WP_CONTENT_DIR . '/documentation/';
                         if(is_dir($doc_dir) === FALSE)
                                 mkdir($doc_dir, 0774);
                         
-                        if(isset($input['lang']))
+                        if(isset($input['lang']) && isset($input['product']))
                                 $lang_dir = $doc_dir . $input['lang'] . '/';
-                        else if(isset($input['new']['lang']))
-                                $lang_dir = $doc_dir . $input['new']['lang'] . '/';
+                        else if(isset($input['new']['lang']) && isset($input['new']['product']))
+                                $lang_dir = $doc_dir . $input['new']['lang'] . '/' ;
                         
                         if(is_dir($lang_dir) === FALSE)
                                 mkdir($lang_dir, 0774);
+                        
+                        if(isset($input['product']))
+                                $product_dir = $lang_dir . $input['product'] . '/';
+                        else if(isset($input['new']['product']))
+                                $product_dir = $lang_dir . $input['new']['product'] . '/';
                                 
-                        $target_file = $lang_dir . basename($file_input["name"]['text']);
-                        if(move_uploaded_file($file_input["tmp_name"]['text'], $target_file) !== TRUE)
+                        if(is_dir($product_dir) === FALSE)
+                                mkdir($product_dir, 0774);
+                                
+                        $target_file = $product_dir . $file_basename;
+                        if(move_uploaded_file($file_input, $target_file) !== TRUE)
                                 trigger_error('Cannot move the file: ' . $target_file, E_USER_ERROR);
                         $parser = new Gregwar\RST\Parser;
                         $file = fopen($target_file, 'r');
                         $source = fread($file, filesize($target_file));
                         
+                        if(isset($input['new']))
+                                $input['new']['file'] = $target_file;
+                        else
+                                $input['file'] = $target_file;
+                                
                         $document = $parser->parse($source);
                 }
                 
@@ -390,6 +405,7 @@ class xs_documentation_plugin
                 $fields[] = "Product";
                 $fields[] = "Language";
                 $fields[] = "Title";
+                $fields[] = "File";
                 $fields[] = "Created By";
                 $fields[] = "Created at";
                 $fields[] = "Last edit on";

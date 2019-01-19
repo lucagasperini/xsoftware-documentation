@@ -239,7 +239,7 @@ class xs_documentation_database
         function update_single($single, $id)
         {
                 $id = sanitize_text_field($id);
-                $sql = "SELECT name,product,lang,title,text,modify_date FROM xs_documentation WHERE id=". $id ;
+                $sql = "SELECT name,product,lang,title,text,file,modify_date FROM xs_documentation WHERE id=". $id ;
 
                 $result = $this->execute_query($sql);
                 $default = $result->fetch_assoc();
@@ -249,7 +249,7 @@ class xs_documentation_database
                 $single['modify_date'] = time();
 
 
-                $sql = 'UPDATE xs_documentation SET name=?,product=?,lang=?,title=?,text=?,modify_date=? WHERE id=?';
+                $sql = 'UPDATE xs_documentation SET name=?,product=?,lang=?,title=?,text=?,file=?,modify_date=? WHERE id=?';
                 
                 $query = $this->conn->prepare($sql);
                 
@@ -257,12 +257,13 @@ class xs_documentation_database
                         trigger_error('Wrong SQL: ' . $sql . ' Error: ' . $this->conn->errno . ' ' . $this->conn->error, E_USER_ERROR);
                 }
                 $query->bind_param(
-                        "sssssii", 
+                        "ssssssii", 
                         $single['name'],
                         $single['product'], 
                         $single['lang'],
                         $single['title'],
                         $single['text'], 
+                        $single['file'],
                         $single['modify_date'], 
                         $id
                 );
