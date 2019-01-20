@@ -40,17 +40,6 @@ class xs_documentation_plugin
         
         function admin_menu()
         {
-                global $menu;
-                $menuExist = false;
-                foreach($menu as $item) {
-                        if(strtolower($item[0]) == strtolower("XSoftware")) {
-                                $menuExist = true;
-                        }
-                }
-                
-                if(!$menuExist)
-                        add_menu_page( "XSoftware", "XSoftware", "manage_options", "xsoftware", array($this, "menu_page") );
-                        
                 add_submenu_page( "xsoftware", "XSoftware Documentation", "Documentation", "manage_options", "xsoftware_documentation", array($this, "menu_page") );
         }
         
@@ -459,8 +448,8 @@ class xs_documentation_plugin
         
 }
 
-endif;
-
 $documentation_plugin = new xs_documentation_plugin;
+
+endif;
 
 ?>
