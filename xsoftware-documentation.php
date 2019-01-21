@@ -238,6 +238,8 @@ class xs_documentation_plugin
                         'text' => 'Back'
                 ));
                 
+                $langs = xs_framework::get_option('available_languages');
+                
                 $docs = $this->db->get($id);
                 if(count($docs) != 1)
                         return;
@@ -265,9 +267,8 @@ class xs_documentation_plugin
                 $data['lang'][1] = xs_framework::create_select( array(
                         'class' => 'xs_full_width', 
                         'name' => 'xs_docs[lang]', 
-                        'data' => xs_language::$language_codes, 
+                        'data' => $langs, 
                         'selected' => $doc['lang'],
-                        'reverse' => true, 
                         'return' => true
                 ));
                 
@@ -310,6 +311,7 @@ class xs_documentation_plugin
                         'text' => 'Back'
                 ));
                 
+                $langs = xs_framework::get_option('available_languages');
                 $fields = $this->db->get_fields(array('id'));
                 $size_fields = count($fields);
                 $products = $this->options['product_list'];
@@ -336,8 +338,7 @@ class xs_documentation_plugin
                 $data['lang'][1] = xs_framework::create_select( array(
                         'class' => 'xs_full_width', 
                         'name' => 'xs_docs[new][lang]', 
-                        'data' => xs_language::$language_codes, 
-                        'reverse' => true, 
+                        'data' => $langs,
                         'return' => true
                 ));
                         
