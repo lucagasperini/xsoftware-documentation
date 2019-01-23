@@ -238,7 +238,7 @@ class xs_documentation_plugin
                         'text' => 'Back'
                 ));
                 
-                $langs = xs_framework::get_option('available_languages');
+                $langs = xs_framework::get_available_language();
                 
                 $docs = $this->db->get($id);
                 if(count($docs) != 1)
@@ -311,7 +311,7 @@ class xs_documentation_plugin
                         'text' => 'Back'
                 ));
                 
-                $langs = xs_framework::get_option('available_languages');
+                $langs = xs_framework::get_available_language();
                 $fields = $this->db->get_fields(array('id'));
                 $size_fields = count($fields);
                 $products = $this->options['product_list'];
