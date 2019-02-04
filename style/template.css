@@ -42,12 +42,10 @@ h5 {
 
 .css-treeview
 {
-    background-color:#343131;
 }
 
 .css-treeview label
 {
-    color: #ffb342;
     margin: 0 0 0 16px;
     font-size: 20px;
 }
@@ -56,13 +54,8 @@ h5 {
         float:right;
 }
 
-.row {
-        width:100%;
-}
-
 .row > a
 {
-        color: #ffb342;
         margin: 0 0 0 64px;
         text-decoration: none;
         font-size: 16px;
