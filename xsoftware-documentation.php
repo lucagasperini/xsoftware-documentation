@@ -39,12 +39,7 @@ class xs_documentation_plugin
                 add_filter('archive_template', array($this,'archive'));
                 add_action('add_meta_boxes', array($this, 'metaboxes'));
                 add_action("admin_enqueue_scripts", array($this, "enqueue"));
-                
-                // Post filtering
-                remove_filter('content_save_pre', 'wp_filter_post_kses');
-                remove_filter('excerpt_save_pre', 'wp_filter_post_kses');
-                remove_filter('content_filtered_save_pre', 'wp_filter_post_kses');
-                
+
                 $this->options = get_option('xs_options_docs', $this->default);
         }
         
