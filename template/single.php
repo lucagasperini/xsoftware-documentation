@@ -12,10 +12,14 @@
         echo '<main id="main" class="post-wrap" role="main">';
         while ( have_posts() ) {
                 the_post();
-                $id = get_the_ID();
+                $the_post = get_post(get_the_ID());
                 
-                echo '<h2>'.get_the_title($id).'</h2>';
-                echo get_post_meta($id, 'xs_documentation_html', true);
+                echo '<h2>'.$the_post->post_title.'</h2>';
+                
+                $content = $the_post->post_content;
+                $parser = new Gregwar\RST\Parser;
+   
+                echo $parser->parse($post->post_content);
                 
                 // If comments are open or we have at least one comment, load up the comment template
                 if ( comments_open() || get_comments_number() )

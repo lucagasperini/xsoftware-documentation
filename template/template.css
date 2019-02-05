@@ -40,13 +40,13 @@ h5 {
         list-style: none;
 }
 
-.css-treeview
+.css-treeview > img
 {
+        float: left;
 }
 
 .css-treeview label
 {
-    margin: 0 0 0 16px;
     font-size: 20px;
 }
 
@@ -56,7 +56,7 @@ h5 {
 
 .row > a
 {
-        margin: 0 0 0 64px;
+        margin: 0 0 0 150px;
         text-decoration: none;
         font-size: 16px;
         -webkit-transition: all 0.0s ease-in-out;
