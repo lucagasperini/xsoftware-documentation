@@ -123,6 +123,8 @@ class xs_documentation_plugin
         function remove_editor()
         {
                 global $post;
+                if(!isset($post) || empty($post)) return;
+                
                 $post_type = get_post_type($post->ID);
                 
                 if ( $post_type != 'xs_doc' ) return;
@@ -141,7 +143,8 @@ class xs_documentation_plugin
         }
         
         
-        function single($single) {
+        function single($single) 
+        {
                 global $post;
 
                 /* Checks for single template by post type */
@@ -154,7 +157,8 @@ class xs_documentation_plugin
                 return $single;
         }
         
-        function archive($single) {
+        function archive($single)
+        {
                 global $post;
 
                 /* Checks for single template by post type */
