@@ -7,7 +7,7 @@ Author: Luca Gasperini
 Author URI: https://xsoftware.it/
 */
 
-if(!defined("ABSPATH")) exit;
+if(!defined("ABSPATH")) die;
 
 if (!class_exists("xs_documentation_plugin")) :
 

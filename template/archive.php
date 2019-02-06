@@ -1,4 +1,6 @@
 <?php
+        if(!defined("ABSPATH")) die;
+        
         wp_enqueue_style('xs_documentation_style', plugins_url('template.css', __FILE__));
         wp_enqueue_style('xs_documentation_fontawesome_style', 'https://use.fontawesome.com/releases/v5.6.3/css/all.css');
         

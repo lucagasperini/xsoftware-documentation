@@ -1,4 +1,6 @@
 <?php
+        if(!defined("ABSPATH")) die;
+        
         if(isset($_GET['download'])) {
                 $id = get_the_ID();
                 $post = get_post($id);
