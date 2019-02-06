@@ -38,7 +38,8 @@ class xs_documentation_plugin
                 add_filter('single_template', array($this,'single'));
                 add_filter('archive_template', array($this,'archive'));
                 add_action('add_meta_boxes', array($this, 'metaboxes'));
-                add_action("admin_enqueue_scripts", array($this, "enqueue"));
+                add_filter('wp_default_editor', array($this,'html_editor') );
+                add_filter('admin_footer', array($this,'remove_editor'), 99);
 
                 $this->options = get_option('xs_options_docs', $this->default);
         }
@@ -97,6 +98,46 @@ class xs_documentation_plugin
                
                 if(isset($_POST['xs_documentation_category']))
                         update_post_meta( $post_id, 'xs_documentation_category', $_POST['xs_documentation_category'] );
+                        
+                $parser = new Gregwar\RST\Parser;
+    
+                $document = $parser->parse($post->post_content);
+
+                update_post_meta( $post_id, 'xs_documentation_html', $document );
+        }
+        /*
+        * Callback called to show post RST source instead of rendered content
+        * inside the editor.
+        */
+        function html_editor($content) 
+        {
+                global $post;
+                $post_type = get_post_type($post->ID);
+                
+                if ( $post_type != 'xs_doc' ) 
+                        return $content;
+
+                return 'html';
+        }
+        
+        function remove_editor()
+        {
+                global $post;
+                $post_type = get_post_type($post->ID);
+                
+                if ( $post_type != 'xs_doc' ) return;
+                
+                echo '  <style type="text/css">
+                                #content-tmce, #content-tmce:hover, #qt_content_fullscreen{
+                                display:none;
+                        }
+                        </style>';
+                        
+                echo '  <script type="text/javascript">
+                        jQuery(document).ready(function(){
+                                jQuery("#content-tmce").attr("onclick", null);
+                        });
+                        </script>';
         }
         
         
@@ -155,11 +196,6 @@ class xs_documentation_plugin
         {
                 register_setting( 'doc_setting', 'xs_options_docs', array($this, 'input') );
                 add_settings_section( 'doc_section', 'Settings', array($this, 'show'), 'doc' );
-        }
-        
-        function enqueue()
-        {
-
         }
         
         function input($input)
