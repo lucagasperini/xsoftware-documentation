@@ -146,6 +146,8 @@ class xs_documentation_plugin
         function single($single) 
         {
                 global $post;
+                
+                if(empty($post)) return $single;
 
                 /* Checks for single template by post type */
                 if ( $post->post_type == 'xs_doc' ) {
@@ -160,6 +162,8 @@ class xs_documentation_plugin
         function archive($single)
         {
                 global $post;
+                
+                if(empty($post)) return $single;
 
                 /* Checks for single template by post type */
                 if ( $post->post_type == 'xs_doc' ) {
