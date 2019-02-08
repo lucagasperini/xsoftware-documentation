@@ -64,7 +64,7 @@ class xs_documentation_plugin
         
         function metaboxes()
         {
-                add_meta_box( 'xs_bugtracking_metaboxes', 'XSoftware Documentation', array($this,'metaboxes_print'), array('xs_doc'),'advanced','high');
+                add_meta_box( 'xs_documentation_metaboxes', 'XSoftware Documentation', array($this,'metaboxes_print'), ['xs_doc'],'advanced','high');
         }
         
         function metaboxes_print()
@@ -189,7 +189,7 @@ class xs_documentation_plugin
                 echo "<div class=\"wrap\">";
                 echo "<h2>Documentation configuration</h2>";
                 
-                echo '<form enctype="multipart/form-data" action="options.php" method="post">';
+                echo '<form action="options.php" method="post">';
 
                 settings_fields('doc_setting');
                 do_settings_sections('doc');
