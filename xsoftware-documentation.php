@@ -267,8 +267,7 @@ class xs_documentation_plugin
                                 'style' => 'display:none;',
                                 'name' => 'xs_options_docs[cat]['.$key.'][img]',
                                 'onclick' => 'wp_media_gallery_url(\'' . 'cat['.$key.'][input]' . '\',\'' . 'cat['.$key.'][image]' . '\')',
-                                'value' => $prop['img'],
-                                'return' => TRUE,
+                                'value' => $prop['img']
                         ]);
                         if(empty($prop['img']))
                                 $url_img = xs_framework::url_image('select.png');
@@ -285,13 +284,11 @@ class xs_documentation_plugin
                         
                         $name = xs_framework::create_input([
                                 'name' => 'xs_options_docs[cat]['.$key.'][name]',
-                                'value' => $prop['name'],
-                                'return' => TRUE,
+                                'value' => $prop['name']
                         ]);
                         $descr = xs_framework::create_textarea([
                                 'name' => 'xs_options_docs[cat]['.$key.'][descr]',
-                                'text' => $prop['descr'],
-                                'return' => TRUE,
+                                'text' => $prop['descr']
                         ]);
                         
                         $data[$key]['img'] = xs_framework::create_label([
