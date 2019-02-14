@@ -259,6 +259,7 @@ class xs_documentation_plugin
                                 'class' => 'button-primary xs_margin',
                                 'text' => 'Add new category', 
                                 'name' => 'xs_options_docs[add_cat]',
+                                'echo' => TRUE
                         ]);
                 
                 foreach($options as $key => $prop) {
