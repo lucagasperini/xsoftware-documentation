@@ -83,8 +83,7 @@ class xs_documentation_plugin
                         'class' => 'xs_full_width', 
                         'name' => 'xs_documentation_category',
                         'data'=> $categories,
-                        'selected' => $selected,
-                        'return' => true
+                        'selected' => $selected
                 ));
 
                 
