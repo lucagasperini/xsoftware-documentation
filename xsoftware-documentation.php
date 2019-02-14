@@ -30,7 +30,6 @@ class xs_documentation_plugin
 
         public function __construct()
         {
-                ob_start();
                 add_action('admin_menu', array($this, 'admin_menu'));
                 add_action('admin_init', array($this, 'section_menu'));
                 add_action('init', array($this, 'create_post_type'));
