@@ -6,6 +6,21 @@
         font-size: 13px;
 }
 
+.single_content_area {
+        max-width:800px;
+        padding:1.618em 3.236em;
+        box-shadow: 0 4px 4px rgba(0,0,0,.5);
+        margin:0 auto;
+        float:none !important;
+}
+
+.archive_content_area {
+        max-width:800px;
+        padding:1.618em 3.236em;
+        margin:0 auto;
+        float:none !important;
+}
+
 .c {
         display:inline-block;
         width-min: 100%;

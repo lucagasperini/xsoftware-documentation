@@ -19,13 +19,9 @@
         wp_enqueue_style('xs_documentation_style', plugins_url('template.css', __FILE__));
         
         get_header(); 
-        if (get_theme_mod('fullwidth_single')) { //Check if the post needs to be full width
-                $fullwidth = 'fullwidth';
-        } else {
-                $fullwidth = '';
-        }
-
-        echo '<div id="primary" class="content-area col-md-9 '.$fullwidth.'">';
+        $layout = get_theme_mod('page_layout');
+        
+        echo '<div id="primary" class="single_content_area '.$layout.'">';
 
         echo '<main id="main" class="post-wrap" role="main">';
         while ( have_posts() ) {
@@ -43,7 +39,7 @@
 
         echo '</main></div>';
 
-        if ( get_theme_mod('fullwidth_single', 0) != 1 )
+        if ( $layout !== 'fullscreen' )
                 get_sidebar();
                 
         get_footer(); 

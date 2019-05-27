@@ -9,7 +9,9 @@
         $option = get_option('xs_options_docs');
         $option = $option['categories'];
         
-        echo '<div id="primary" class="content-area col-md-9">';
+        $layout = get_theme_mod('page_layout');
+        
+        echo '<div id="primary" class="archive_content_area '.$layout.'">';
 
         echo '<main id="main" class="post-wrap" role="main">';
 
@@ -65,7 +67,8 @@
 
         echo '</main></div>';
 
-        get_sidebar();
+        if ( $layout !== 'fullscreen' )
+                get_sidebar();
 
         
         get_footer();
