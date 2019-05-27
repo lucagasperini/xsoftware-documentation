@@ -209,14 +209,14 @@ class xs_documentation_plugin
 
                 $current = $this->options;
                 
-                if(isset($input['cat']) && !empty($input['cat']))
-                        $current['categories'] = $input['cat'];
+                if(isset($input['obj_list']) && !empty($input['obj_list']))
+                        $current['categories'] = $input['obj_list'];
                         
-                if(isset($input['add_cat']))
+                if(isset($input['add']))
                         $current['categories'][] = ['name' => 'New Category', 'descr' => 'This is a description.', 'img' => ''];
                         
-                if(isset($input['remove_cat']) && !empty($input['remove_cat']))
-                        unset($current['categories'][$input['remove_cat']]);
+                if(isset($input['remove']) && !empty($input['remove']))
+                        unset($current['categories'][$input['remove']]);
                 
                 return $current;
         }
@@ -251,69 +251,12 @@ class xs_documentation_plugin
         function show_categories()
         {
                 $options = $this->options['categories'];
-                $data = array();
                 
-                xs_framework::create_button([
-                                'class' => 'button-primary xs_margin',
-                                'text' => 'Add new category', 
-                                'name' => 'xs_options_docs[add_cat]',
-                                'echo' => TRUE
-                        ]);
-                
-                foreach($options as $key => $prop) {
-                        $img_input = xs_framework::create_input([
-                                'id' => 'cat['.$key.'][input]',
-                                'style' => 'display:none;',
-                                'name' => 'xs_options_docs[cat]['.$key.'][img]',
-                                'onclick' => 'wp_media_gallery_url(\'' . 'cat['.$key.'][input]' . '\',\'' . 'cat['.$key.'][image]' . '\')',
-                                'value' => $prop['img']
-                        ]);
-                        if(empty($prop['img']))
-                                $url_img = xs_framework::url_image('select.png');
-                        else
-                                $url_img = $prop['img'];
-                                
-                        $img = xs_framework::create_image([
-                                'src' => $url_img,
-                                'alt' => $prop['name'],
-                                'id' => 'cat['.$key.'][image]',
-                                'width' => 150,
-                                'height' => 150,
-                        ]);
-                        
-                        $name = xs_framework::create_input([
-                                'name' => 'xs_options_docs[cat]['.$key.'][name]',
-                                'value' => $prop['name']
-                        ]);
-                        $descr = xs_framework::create_textarea([
-                                'name' => 'xs_options_docs[cat]['.$key.'][descr]',
-                                'text' => $prop['descr']
-                        ]);
-                        
-                        $data[$key]['img'] = xs_framework::create_label([
-                                'for' => 'cat['.$key.'][input]',
-                                'obj' => [$img_input, $img]
-                        ]);
-                        
-                        $data[$key]['text'] = xs_framework::create_container([
-                                'class' => 'xs_docs_container',
-                                'obj' => [$name, $descr],
-                        ]);
-                        $data[$key]['delete'] = xs_framework::create_button([
-                                'class' => 'button-primary',
-                                'text' => 'Remove',
-                                'onclick' => 'return confirm_box()',
-                                'value' => $key, 
-                                'name' => 'xs_options_docs[remove_cat]',
-                                'return' => TRUE
-                        ]);
-                }
-                
-                xs_framework::create_table([
-                        'class' => 'xs_docs_table',
-                        'data' => $data
+                xs_framework::obj_list_edit([
+                        'id' => 'cat',
+                        'name' => 'xs_options_docs',
+                        'data' => $options
                 ]);
-
         }
 }
 
