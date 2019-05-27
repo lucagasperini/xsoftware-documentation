@@ -223,7 +223,6 @@ class xs_documentation_plugin
        
         function show()
         {
-                wp_enqueue_style('xs_documentation_admin_style', plugins_url('style/admin.css', __FILE__));
                 xs_framework::init_admin_script();
                 xs_framework::init_admin_style();
                 wp_enqueue_media();
