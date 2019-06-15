@@ -15,7 +15,7 @@ include 'RST/autoload.php';
 
 class xs_documentation_plugin
 {
-        
+
         private $default = array(
                                 'categories' => array(
                                         array(
@@ -25,7 +25,7 @@ class xs_documentation_plugin
                                         )
                                 )
                                 );
-        
+
         private $options = NULL;
 
         public function __construct()
@@ -42,10 +42,10 @@ class xs_documentation_plugin
 
                 $this->options = get_option('xs_options_docs', $this->default);
         }
-        
-        function create_post_type() 
+
+        function create_post_type()
         {
-                register_post_type( 
+                register_post_type(
                         'xs_doc',
                         array(
                                 'labels' => array(
@@ -60,12 +60,12 @@ class xs_documentation_plugin
                 );
                 add_post_type_support('xs_doc', array('title','editor','comments','revisions') );
         }
-        
+
         function metaboxes()
         {
                 add_meta_box( 'xs_documentation_metaboxes', 'XSoftware Documentation', array($this,'metaboxes_print'), ['xs_doc'],'advanced','high');
         }
-        
+
         function metaboxes_print()
         {
                 global $post;
@@ -74,31 +74,31 @@ class xs_documentation_plugin
 
                 foreach($this->options['categories'] as $id => $prop)
                         $categories[$id] = $prop['name'];
-                        
+
                 $data = array();
-                
+
                 $data['category'][0] = 'Category:';
                 $data['category'][1] = xs_framework::create_select( array(
-                        'class' => 'xs_full_width', 
+                        'class' => 'xs_full_width',
                         'name' => 'xs_documentation_category',
                         'data'=> $categories,
                         'selected' => $selected
                 ));
 
-                
+
                 xs_framework::create_table(array('class' => 'xs_full_width', 'data' => $data ));
         }
-        
+
         function save($post_id, $post)
         {
                 $post_type = get_post_type($post_id);
                 if ( $post_type != 'xs_doc' ) return;
-               
+
                 if(isset($_POST['xs_documentation_category']))
                         update_post_meta( $post_id, 'xs_documentation_category', $_POST['xs_documentation_category'] );
-                        
+
                 $parser = new Gregwar\RST\Parser;
-    
+
                 $document = $parser->parse($post->post_content);
 
                 update_post_meta( $post_id, 'xs_documentation_html', $document );
@@ -107,44 +107,44 @@ class xs_documentation_plugin
         * Callback called to show post RST source instead of rendered content
         * inside the editor.
         */
-        function html_editor($content) 
+        function html_editor($content)
         {
                 global $post;
                 $post_type = get_post_type($post->ID);
-                
-                if ( $post_type != 'xs_doc' ) 
+
+                if ( $post_type != 'xs_doc' )
                         return $content;
 
                 return 'html';
         }
-        
+
         function remove_editor()
         {
                 global $post;
                 if(!isset($post) || empty($post)) return;
-                
+
                 $post_type = get_post_type($post->ID);
-                
+
                 if ( $post_type != 'xs_doc' ) return;
-                
+
                 echo '  <style type="text/css">
                                 #content-tmce, #content-tmce:hover, #qt_content_fullscreen{
                                 display:none;
                         }
                         </style>';
-                        
+
                 echo '  <script type="text/javascript">
                         jQuery(document).ready(function(){
                                 jQuery("#content-tmce").attr("onclick", null);
                         });
                         </script>';
         }
-        
-        
-        function single($single) 
+
+
+        function single($single)
         {
                 global $post;
-                
+
                 if(empty($post)) return $single;
 
                 /* Checks for single template by post type */
@@ -156,11 +156,11 @@ class xs_documentation_plugin
 
                 return $single;
         }
-        
+
         function archive($single)
         {
                 global $post;
-                
+
                 if(empty($post)) return $single;
 
                 /* Checks for single template by post type */
@@ -172,21 +172,21 @@ class xs_documentation_plugin
 
                 return $single;
         }
-        
+
         function admin_menu()
         {
                 add_submenu_page( "xsoftware", "XSoftware Documentation", "Documentation", "manage_options", "xsoftware_documentation", array($this, "menu_page") );
         }
-        
+
         function menu_page()
         {
                 if ( !current_user_can( "manage_options" ) )  {
                         wp_die( __( "Exit!" ) );
                 }
-                
+
                 echo "<div class=\"wrap\">";
                 echo "<h2>Documentation configuration</h2>";
-                
+
                 echo '<form action="options.php" method="post">';
 
                 settings_fields('doc_setting');
@@ -194,39 +194,39 @@ class xs_documentation_plugin
 
                 submit_button( '', 'primary', 'submit', true, NULL );
                 echo '</form>';
-                
+
                 echo "</div>";
         }
-        
+
         function section_menu()
         {
                 register_setting( 'doc_setting', 'xs_options_docs', array($this, 'input') );
                 add_settings_section( 'doc_section', 'Settings', array($this, 'show'), 'doc' );
         }
-        
+
         function input($input)
         {
 
                 $current = $this->options;
-                
+
                 if(isset($input['obj_list']) && !empty($input['obj_list']))
                         $current['categories'] = $input['obj_list'];
-                        
+
                 if(isset($input['add']))
                         $current['categories'][] = ['name' => 'New Category', 'descr' => 'This is a description.', 'img' => ''];
-                        
+
                 if(isset($input['remove']) && !empty($input['remove']))
                         unset($current['categories'][$input['remove']]);
-                
+
                 return $current;
         }
-       
+
         function show()
         {
-                xs_framework::init_admin_script();
-                xs_framework::init_admin_style();
+
+
                 wp_enqueue_media();
-                
+
                 $tab = xs_framework::create_tabs( array(
                         'href' => '?page=xsoftware_documentation',
                         'tabs' => array(
@@ -236,7 +236,7 @@ class xs_documentation_plugin
                         'home' => 'home',
                         'name' => 'main_tab'
                 ));
-                
+
                 switch($tab) {
                         case 'home':
                                 return;
@@ -244,13 +244,13 @@ class xs_documentation_plugin
                                 $this->show_categories();
                                 return;
                 }
-                
+
         }
-        
+
         function show_categories()
         {
                 $options = $this->options['categories'];
-                
+
                 xs_framework::obj_list_edit([
                         'id' => 'cat',
                         'name' => 'xs_options_docs',
