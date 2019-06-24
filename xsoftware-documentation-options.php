@@ -1,11 +1,4 @@
 <?php
-/*
-Plugin Name: XSoftware Documentation
-Description: Documentation management on WordPress.
-Version: 1.0
-Author: Luca Gasperini
-Author URI: https://xsoftware.it/
-*/
 
 if(!defined('ABSPATH')) die;
 
