@@ -184,7 +184,7 @@ class xs_documentation_plugin
         *  This method is used set the path of php template file for single post
         *  $path is the default single post path
         */
-        function single($single)
+        function single($path)
         {
                 /* Get the global variable $post */
                 global $post;
@@ -202,7 +202,7 @@ class xs_documentation_plugin
         *  This method is used set the path of php template file for archive post
         *  $path is the default single post path
         */
-        function archive($single)
+        function archive($path)
         {
                 /* Get the global variable $post */
                 global $post;
