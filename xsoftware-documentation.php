@@ -19,10 +19,15 @@ class xs_documentation_plugin
 
         private $options = NULL;
 
+        /*
+        *  __construct : void
+        *  The class constructor does not require any parameters and
+        *  initializes the options and hooks for plugin operations
+        */
         public function __construct()
         {
                 add_action('init', [$this, 'create_post_type']);
-                add_action('save_post', [$this,'save'], 10, 2);
+                add_action('save_post', [$this,'save']);
                 add_filter('single_template', [$this,'single']);
                 add_filter('archive_template', [$this,'archive']);
                 add_action('add_meta_boxes', [$this, 'metaboxes']);
@@ -32,6 +37,20 @@ class xs_documentation_plugin
                 $this->options = get_option('xs_options_docs');
         }
 
+        /*
+        *  void : create_post_type : void
+        *  This method create the post type #xs_bug and set it's property:
+        *  Name for the post type: "Documentations"
+        *  Name for single post type: "Documentation"
+        *  It's a public post type
+        *  It has an archive
+        *  Rewrite URL with slug: "docs"
+        *  It can have parent posts
+        *  It supports posts titles
+        *  It supports the editor
+        *  It supports comments
+        *  It supports revisions versions
+        */
         function create_post_type()
         {
                 register_post_type(
@@ -50,6 +69,10 @@ class xs_documentation_plugin
                 add_post_type_support('xs_doc', ['title','editor','comments','revisions'] );
         }
 
+        /*
+        *  void : metaboxes : void
+        *  This method is used to create the metaboxes in editor
+        */
         function metaboxes()
         {
                 add_meta_box(
@@ -62,6 +85,10 @@ class xs_documentation_plugin
                 );
         }
 
+        /*
+        *  void : metaboxes_print : void
+        *  This method is used to print the metaboxes in editor
+        */
         function metaboxes_print()
         {
                 global $post;
@@ -90,10 +117,17 @@ class xs_documentation_plugin
                 ]);
         }
 
-        function save($post_id, $post)
+        /*
+        *  void : save : int
+        *  This method is used to save the metaboxes values into post metadata
+        *  $post_id is the current post id
+        */
+        function save($post_id)
         {
                 $post_type = get_post_type($post_id);
                 if ( $post_type != 'xs_doc' ) return;
+
+                $post = get_post($post_id);
 
                 if(isset($_POST['xs_documentation_category']))
                         update_post_meta(
@@ -145,37 +179,40 @@ class xs_documentation_plugin
                         </script>';
         }
 
-
+        /*
+        *  string : single : string
+        *  This method is used set the path of php template file for single post
+        *  $path is the default single post path
+        */
         function single($single)
         {
+                /* Get the global variable $post */
                 global $post;
 
-                if(empty($post)) return $single;
+                /* Return if current post is empty or is not a #xs_doc */
+                if(empty($post) || $post->post_type !== 'xs_doc')
+                        return $path;
 
-                /* Checks for single template by post type */
-                if ( $post->post_type == 'xs_doc' ) {
-                        if ( file_exists(  dirname( __FILE__ ) . '/template/single.php' ) ) {
-                        return  dirname( __FILE__ ) . '/template/single.php';
-                        }
-                }
-
-                return $single;
+                /* Return the path of php file where is defined the template */
+                return dirname( __FILE__ ) . '/template/single.php';
         }
 
+        /*
+        *  string : archive : string
+        *  This method is used set the path of php template file for archive post
+        *  $path is the default single post path
+        */
         function archive($single)
         {
+                /* Get the global variable $post */
                 global $post;
 
-                if(empty($post)) return $single;
+                /* Return if current post is empty or is not a #xs_doc */
+                if(empty($post) || $post->post_type !== 'xs_doc')
+                        return $path;
 
-                /* Checks for single template by post type */
-                if ( $post->post_type == 'xs_doc' ) {
-                        if ( file_exists(  dirname( __FILE__ ) . '/template/archive.php' ) ) {
-                        return  dirname( __FILE__ ) . '/template/archive.php';
-                        }
-                }
-
-                return $single;
+                /* Return the path of php file where is defined the template */
+                return dirname( __FILE__ ) . '/template/archive.php';
         }
 }
 
