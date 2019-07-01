@@ -14,6 +14,10 @@ if (!class_exists('xs_documentation_plugin')) :
 include 'xsoftware-documentation-options.php';
 include 'RST/autoload.php';
 
+/*
+*  XSoftware Bugtracking Plugin Class
+*  The following class is used to execute plugin operations
+*/
 class xs_documentation_plugin
 {
 
@@ -26,20 +30,27 @@ class xs_documentation_plugin
         */
         public function __construct()
         {
-                add_action('init', [$this, 'create_post_type']);
-                add_action('save_post', [$this,'save']);
-                add_filter('single_template', [$this,'single']);
-                add_filter('archive_template', [$this,'archive']);
-                add_action('add_meta_boxes', [$this, 'metaboxes']);
-                add_filter('wp_default_editor', [$this,'html_editor']);
-                add_filter('admin_footer', [$this,'remove_editor'], 99);
-
                 $this->options = get_option('xs_options_docs');
+
+                /* Create the post type #xs_doc */
+                add_action('init', [$this, 'create_post_type']);
+                /* Save metaboxes values to #xs_doc posts when save a post */
+                add_action('save_post', [$this,'metaboxes_save']);
+                /* Use built-in template for show single #xs_doc posts */
+                add_filter('single_template', [$this,'single']);
+                /* Use built-in template for show archive #xs_doc posts */
+                add_filter('archive_template', [$this,'archive']);
+                /* Add metaboxes to #xs_doc posts */
+                add_action('add_meta_boxes', [$this, 'metaboxes']);
+                /* Filter called to show post from RST source */
+                add_filter('wp_default_editor', [$this,'html_editor']);
+                /* Filter to remove the default visual editor for #xs_doc */
+                add_filter('admin_footer', [$this,'remove_editor'], 99);
         }
 
         /*
         *  void : create_post_type : void
-        *  This method create the post type #xs_bug and set it's property:
+        *  This method create the post type #xs_doc and set it's property:
         *  Name for the post type: "Documentations"
         *  Name for single post type: "Documentation"
         *  It's a public post type
@@ -91,17 +102,25 @@ class xs_documentation_plugin
         */
         function metaboxes_print()
         {
+                /* Get the global variable $post */
                 global $post;
-                $values = get_post_custom( $post->ID );
+                /* Get the values from post metadata */
+                $values = get_post_custom($post->ID);
+                /*
+                *  Get the current category of the documentation casted as integer,
+                *  get an empty string if it's not present
+                */
                 $selected = isset( $values['xs_documentation_category'][0] ) ?
                         intval($values['xs_documentation_category'][0]) :
                         '';
 
+                /* Put all categories name in the array $categories by their id */
                 foreach($this->options['categories'] as $id => $prop)
                         $categories[$id] = $prop['name'];
 
                 $data = array();
 
+                /* Create a html select with the list of categories */
                 $data['category'][0] = 'Category:';
                 $data['category'][1] = xs_framework::create_select([
                         'class' => 'xs_full_width',
@@ -110,7 +129,7 @@ class xs_documentation_plugin
                         'selected' => $selected
                 ]);
 
-
+                /* Print the previous html element as table */
                 xs_framework::create_table([
                         'class' => 'xs_full_width',
                         'data' => $data
@@ -118,17 +137,17 @@ class xs_documentation_plugin
         }
 
         /*
-        *  void : save : int
+        *  void : metaboxes_save : int
         *  This method is used to save the metaboxes values into post metadata
         *  $post_id is the current post id
         */
-        function save($post_id)
+        function metaboxes_save($post_id)
         {
-                $post_type = get_post_type($post_id);
-                if ( $post_type != 'xs_doc' ) return;
+                /* Return if current post type is not a #xs_doc */
+                if(get_post_type($post_id) !== 'xs_doc')
+                        return;
 
-                $post = get_post($post_id);
-
+                /* Update post metadata of category by current $_POST value */
                 if(isset($_POST['xs_documentation_category']))
                         update_post_meta(
                                 $post_id,
@@ -136,42 +155,55 @@ class xs_documentation_plugin
                                 $_POST['xs_documentation_category']
                         );
 
+                /* Fetch by post query the post_content */
+                $content = get_post_field('post_content', $post_id);
+                /* Initialize the RST Parser */
                 $parser = new Gregwar\RST\Parser;
+                /* Parse in HTML the current content */
+                $document = $parser->parse($content);
 
-                $document = $parser->parse($post->post_content);
-
+                /* Update the post meta of html documentation text */
                 update_post_meta( $post_id, 'xs_documentation_html', $document );
         }
+
         /*
-        * Callback called to show post RST source instead of rendered content
-        * inside the editor.
+        *  string : html_editor : string
+        *  This method is used to show post RST source instead of
+        *  rendered content inside the editor.
+        *  $content is the post content
         */
         function html_editor($content)
         {
                 global $post;
-                $post_type = get_post_type($post->ID);
 
-                if ( $post_type != 'xs_doc' )
+                /* Return the content if current post type is not a #xs_doc */
+                if(get_post_type($post->ID) !== 'xs_doc')
                         return $content;
 
                 return 'html';
         }
 
+        /*
+        *  void : remove_editor : void
+        *  This method is used to add on the footer od administration panel
+        *  the css code and the javascript code to remove the default visual editor
+        */
         function remove_editor()
         {
                 global $post;
-                if(!isset($post) || empty($post)) return;
 
-                $post_type = get_post_type($post->ID);
+                /* Return if current post type is not a #xs_doc */
+                if(empty($post) || get_post_type($post->ID) !== 'xs_doc')
+                        return;
 
-                if ( $post_type != 'xs_doc' ) return;
-
+                /* Print the css on the footer to hide visual editor */
                 echo '  <style type="text/css">
                                 #content-tmce, #content-tmce:hover, #qt_content_fullscreen{
                                 display:none;
                         }
                         </style>';
 
+                /* Print the javascript on the footer to remove onclick function of visual editor */
                 echo '  <script type="text/javascript">
                         jQuery(document).ready(function(){
                                 jQuery("#content-tmce").attr("onclick", null);

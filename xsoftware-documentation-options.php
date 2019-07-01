@@ -157,12 +157,13 @@ class xs_documentation_options
         */
         function show_categories()
         {
-                $options = $this->options['categories'];
-
+                /*
+                *  Display products using the html-utils of xsoftware {obj_list_edit}
+                */
                 xs_framework::obj_list_edit([
                         'id' => 'cat',
                         'name' => 'xs_options_docs',
-                        'data' => $options
+                        'data' => $this->options['categories']
                 ]);
         }
 }
