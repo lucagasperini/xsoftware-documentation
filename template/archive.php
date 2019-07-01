@@ -1,16 +1,16 @@
 <?php
         if(!defined("ABSPATH")) die;
-        
-        wp_enqueue_style('xs_documentation_style', plugins_url('template.css', __FILE__));
-        wp_enqueue_style('xs_documentation_fontawesome_style', 'https://use.fontawesome.com/releases/v5.6.3/css/all.css');
-        
+
+        /* Load the template css */
+        wp_enqueue_style('xs_documentation_style', plugins_url('template.min.css', __FILE__));
+
         get_header();
-        
+
         $option = get_option('xs_options_docs');
         $option = $option['categories'];
-        
+
         $layout = get_theme_mod('page_layout');
-        
+
         echo '<div id="primary" class="archive_content_area '.$layout.'">';
 
         echo '<main id="main" class="post-wrap" role="main">';
@@ -20,9 +20,9 @@
                 the_archive_title( '<h3 class="archive-title">', '</h3>' );
                 the_archive_description( '<div class="taxonomy-description">', '</div>' );
                 echo '</header>';
-                
+
                 $html_list = array();
-                while ( have_posts() ) { 
+                while ( have_posts() ) {
                         the_post();
                         $id = get_the_ID();
                         $product = get_post_meta( $id, 'xs_documentation_category', true );
@@ -70,6 +70,6 @@
         if ( $layout !== 'fullscreen' )
                 get_sidebar();
 
-        
+
         get_footer();
 ?>
