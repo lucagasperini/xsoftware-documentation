@@ -131,10 +131,9 @@ class xs_documentation_options
                 $tab = xs_framework::create_tabs([
                         'href' => '?page=xsoftware_documentation',
                         'tabs' => [
-                                'home' => 'Homepage',
                                 'categories' => 'Categories'
                         ],
-                        'home' => 'home',
+                        'home' => 'categories',
                         'name' => 'main_tab'
                 ]);
 
@@ -142,8 +141,6 @@ class xs_documentation_options
                 *  Switch for the current tab value and call the right method
                 */
                 switch($tab) {
-                        case 'home':
-                                return;
                         case 'categories':
                                 $this->show_categories();
                                 return;
