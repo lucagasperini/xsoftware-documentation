@@ -226,7 +226,7 @@ class xs_documentation_plugin
                         return $path;
 
                 /* Return the path of php file where is defined the template */
-                return dirname( __FILE__ ) . '/template/single.php';
+                return dirname( __FILE__ ) . '/single.php';
         }
 
         /*
@@ -244,7 +244,7 @@ class xs_documentation_plugin
                         return $path;
 
                 /* Return the path of php file where is defined the template */
-                return dirname( __FILE__ ) . '/template/archive.php';
+                return dirname( __FILE__ ) . '/archive.php';
         }
 }
 

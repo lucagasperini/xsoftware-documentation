@@ -24,27 +24,21 @@
                 exit;
         }
 
-        /* Load the documention template style */
-        wp_enqueue_style('xs_documentation_style', plugins_url('template.min.css', __FILE__));
-
         get_header();
 
+        $layout = get_theme_mod('page_layout');
+
         /* Print primary and main elements */
-        echo '<div id="primary" class="archive_content_area">
+        echo '<div class="wrap">
+        <div id="primary" class="content-area '.$layout.'">
         <main id="main" class="post-wrap" role="main">';
 
         /* Post loop */
         /* TODO:It's needed? */
         while ( have_posts() ) {
                 the_post();
-                /* Get the post id */
-                $id = get_the_ID();
 
-                /* Print the title of the documentation */
-                echo '<h1>'.get_the_title($id).'</h1>';
-
-                /* Print the parsed HTML of the documentation*/
-                echo get_post_meta($id, 'xs_documentation_html', true);
+                echo apply_filters('xs_documentation_single_show', get_the_ID());
 
                 /* If comments are open or it has at least one comment, load the comment template */
                 if ( comments_open() || get_comments_number() )
@@ -52,7 +46,7 @@
         }
 
         /* Close primary and main elements */
-        echo '</main></div>';
+        echo '</main></div></div>';
 
         get_footer();
 ?>
