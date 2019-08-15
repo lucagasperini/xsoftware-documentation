@@ -12,7 +12,6 @@ if(!defined('ABSPATH')) die;
 if (!class_exists('xs_documentation_plugin')) :
 
 include 'xsoftware-documentation-options.php';
-include 'RST/autoload.php';
 
 /*
 *  XSoftware Bugtracking Plugin Class
@@ -154,6 +153,7 @@ class xs_documentation_plugin
                                 'xs_documentation_category',
                                 $_POST['xs_documentation_category']
                         );
+                include 'RST/autoload.php';
 
                 /* Fetch by post query the post_content */
                 $content = get_post_field('post_content', $post_id);
